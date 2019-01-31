@@ -1,0 +1,58 @@
+# Get value from a dictionary
+print(cat2['name'])
+
+property = 'age'
+print(cat[property])
+
+
+# Return the artists first and last name from the dictionary artist
+artist = {
+    "first": "Neil",
+    "last": "Young",
+}
+
+fullName = artist['first'] + " " + artist['last']
+print(fullName)
+print()
+
+
+# Access all values in a dictionary
+for value in cat.values():
+    print(value)
+print()
+for key in cat.keys():
+    print(key)
+print()
+
+for item in cat.items():
+    print(item)
+print()
+
+for key, value in cat.items():
+    print(f"{key} <==> {value}")
+print()
+
+
+
+# calculate the value of the donations
+donations = dict(sam=25.0, lena=88.99, chuck=13.0, linus=99.5, stan=150.0, lisa=50.25, harrison=10.0)
+total_donations = 0
+for value in donations.values():
+    total_donations += value
+
+print(total_donations)
+
+# another solution
+total_donations = sum(donation for donation in donations.values())
+print(total_donations)
+
+# yet another solution
+total_donations = sum(donations.values())
+print(total_donations)
+print()
+
+
+# Test for existance of a key or value
+print('name' in cat)
+print('address' in cat2)
+print('blue' in cat.values())

@@ -1,0 +1,9 @@
+# Create dictionary
+cat = {"name":"blue", "age":3.5, "isCute":True}
+print(cat)
+print()
+
+# Another way to create a dictionary
+cat2 = dict(name="kitty", age = 0.5)
+print(cat2)
+print()
