@@ -10,3 +10,8 @@ class Card:
             self.value = value
         else:
             raise ValueError("Not an acceptable card")
+
+    def __repr__(self):
+        return f"{self.value} of {self.suit}"
+
+# print(Card("A", "Hearts"))

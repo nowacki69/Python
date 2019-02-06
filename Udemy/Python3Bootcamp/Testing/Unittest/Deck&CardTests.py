@@ -4,7 +4,7 @@ import unittest
 
 class CardTests(unittest.TestCase):
     def setUp(self):
-        self.card = Card("Hearts", "A")
+        self.card = Card("A", "Hearts")
 
     def test_init(self):
         """cards should have a suit and a value """
@@ -21,7 +21,7 @@ class DeckTests(unittest.TestCase):
 
     def test_init(self):
         """decks should have a cards attribute, which is a """
-        self.assertTrue(isinstance(self.deck.cards), 52)
+        self.assertTrue(len(self.deck.cards), 52)
 
     def test_repr(self):
         """repr should return a string of the form 'Deck of 52' cards """
@@ -29,15 +29,15 @@ class DeckTests(unittest.TestCase):
 
     def test_count(self):
         """count should return a count of the number of cards remaining """
-        self.assertEqual(self.deck.count(), 'Deck of 52')
-        self.deck.cards.pop()
+        self.assertEqual(self.deck.count(), 52)
+        self.deck.deal_card()
         self.assertEqual(self.deck.count(), 51)
 
     def test_deal_sufficient_cards(self):
         """ _deal should deal the number of cards specified, """
         cards = self.deck._deal(10)
         self.assertEqual(len(cards), 10)
-        self.assertEqual(self.deck.count(), 'Deck of 42')
+        self.assertEqual(self.deck.count(), 42)
 
     def test_deal_insufficient_cards(self):
         """ _deal should deal the number of cards remaining """
