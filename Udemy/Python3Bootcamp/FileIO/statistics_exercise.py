@@ -3,12 +3,11 @@
 def statistics(filename):
     results = dict.fromkeys(('lines','words','characters'), 0)
     with open(filename) as input:
-        chapter = input.read()
+        lines = input.readlines()
 
-    results['lines'] = chapter.count('\n') - 1
-    results['words'] = chapter.count(' ') + results['lines']
-    results['characters'] = len(chapter) - results['lines']
-
+    results['lines'] = len(lines)
+    results['words'] = sum(len(line.split(' ')) for line in lines)
+    results['characters'] = sum(len(line) for line in lines)
     return results
 
-print(statistics("C:\\users\\333051\\Documents\\Python\\Udemy\\Python3Bootcamp\\FileIO\\story.txt"))
+print(statistics("C:\\users\\Wizard\\Documents\\Python\\Udemy\\Python3Bootcamp\\FileIO\\story.txt"))
