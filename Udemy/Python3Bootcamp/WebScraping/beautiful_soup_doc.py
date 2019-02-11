@@ -515,3 +515,40 @@ print(f"3. {title_tag}")			# <title>The Dormouse's story</title>
 print()
 print("soup.head.contents.contents")
 print(f"4. {title_tag.contents}")	# [u'The Dormouse's story']
+print()
+
+# The BeautifulSoup object itself has children. In this case, the <html> tag
+# is the child of the BeautifulSoup object.:
+print("The BeautifulSoup object")
+print(f"Len(soup.contents) = {len(soup.contents)}")				# 1
+print(f"soup.contents[0] = {soup.contents[0].name}")	# None
+print(f"soup.contents[1] = {soup.contents[1].name}")	# 'html'
+print()
+
+# # A string does not have .contents, because it can’t contain anything:
+# text = title_tag.contents[0]
+# print(text.contents)			# AttributeError: 'NavigableString' object has no attribute 'contents'
+
+# Instead of getting them as a list, you can iterate over a tag’s children
+# using the .children generator:
+print("Iterating over a tag's children with .children")
+for child in title_tag.children:
+    print(child)					# The Dormouse's story
+print()
+print()
+
+
+# .descendants
+# The .contents and .children attributes only consider a tag’s direct children.
+# For instance, the <head> tag has a single direct child– the <title> tag:
+print(head_tag.contents)			# [<title>The Dormouse's story</title>]
+
+# But the <title> tag itself has a child: the string “The Dormouse’s story”.
+# There’s a sense in which that string is also a child of the <head> tag.
+# The .descendants attribute lets you iterate over all of a tag’s children,
+# recursively: its direct children, the children of its direct children,
+# and so on:
+for child in head_tag.descendants:
+    print(child)					# <title>The Dormouse's story</title>
+									# The Dormouse's story
+									
