@@ -320,57 +320,54 @@ for child in head_tag.descendants:
  									# The Dormouse's story
 print()
 
-print("   The <head> tag has only one child, but it has two descendants: the <title> tag")
-print("   and the <title> tag’s child. The BeautifulSoup object only has one direct")
-print("   child (the <html> tag), but it has a whole lot of descendants:")
+print("    The <head> tag has only one child, but it has two descendants: the <title> tag")
+print("    and the <title> tag’s child. The BeautifulSoup object only has one direct")
+print("    child (the <html> tag), but it has a whole lot of descendants:")
 print()
-print(f"     len(list(soup.children)): {len(list(soup.children))}")         # 2
-print(f"     len(list(soup.descendants)): {len(list(soup.descendants))}")   # 25
+print(f"      len(list(soup.children)): {len(list(soup.children))}")         # 2
+print(f"      len(list(soup.descendants)): {len(list(soup.descendants))}")   # 25
 print()
 
-
-# # .string
-#
-# # If a tag has only one child, and that child is a NavigableString, the child
-# # is made available as .string:
-# print("title_tag.string")
-# print(title_tag.string)		# u'The Dormouse's story'
-# print()
-#
-# # If a tag’s only child is another tag, and that tag has a .string, then the
-# # parent tag is considered to have the same .string as its child:
-# print("head_tag.contents")
-# print(head_tag.contents)	# [<title>The Dormouse's story</title>]
-# print()
-# print("head_tag.string")
-# print(head_tag.string)		# u'The Dormouse's story'
-# print()
-#
-# # If a tag contains more than one thing, then it’s not clear what .string
-# # should refer to, so .string is defined to be None:
-# print("print(soup.html.string)")
-# print(soup.html.string)			# None
-# print()
-#
-#
-# # .strings and stripped_strings
-#
-# # If there’s more than one thing inside a tag, you can still look at just the
-# # strings. Use the .strings generator:
-#
-# for string in soup.strings:
-#     print(repr(string))
-# # u"The Dormouse's story"
-# # u'\n\n'
-# # u"The Dormouse's story"
-# # u'\n\n'
-# # u'Once upon a time there were three little sisters; and their names were\n'
-# # u'Elsie'
-# # u',\n'
-# # u'Lacie'
-# # u' and\n'
-# # u'Tillie'
-# # u';\nand they lived at the bottom of a well.'
-# # u'\n\n'
-# # u'...'
-# # u'\n'
+print("  .string")
+print()
+print("    If a tag has only one child, and that child is a NavigableString, the child")
+print("    is made available as .string:")
+print()
+print(f"      title_tag.string: {title_tag.string}")    # u'The Dormouse's story'
+print()
+print("    If a tag’s only child is another tag, and that tag has a .string, then the")
+print("    parent tag is considered to have the same .string as its child:")
+print()
+print(f"      head_tag.contents: {head_tag.contents}")	# [<title>The Dormouse's story</title>]
+print(f"      head_tag.string: {head_tag.string}")      # u'The Dormouse's story'
+print()
+print("    If a tag contains more than one thing, then it’s not clear what .string")
+print("    should refer to, so .string is defined to be None:")
+print()
+print(f"      print(soup.html.string): {print(soup.html.string)}")  # None
+print()
+print("  .strings and stripped_strings")
+print()
+print("    If there’s more than one thing inside a tag, you can still look at just the")
+print("    strings. Use the .strings generator:")
+print()
+print("      for string in soup.strings:")
+print("        print(repr(string))")
+print()
+for string in soup.strings:
+    print(f"        repr(string): {repr(string)}")
+                    # u"The Dormouse's story"
+                    # u'\n\n'
+                    # u"The Dormouse's story"
+                    # u'\n\n'
+                    # u'Once upon a time there were three little sisters; and their names were\n'
+                    # u'Elsie'
+                    # u',\n'
+                    # u'Lacie'
+                    # u' and\n'
+                    # u'Tillie'
+                    # u';\nand they lived at the bottom of a well.'
+                    # u'\n\n'
+                    # u'...'
+                    # u'\n'
+print()
