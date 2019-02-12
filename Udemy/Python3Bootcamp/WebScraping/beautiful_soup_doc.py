@@ -371,3 +371,88 @@ for string in soup.strings:
                     # u'...'
                     # u'\n'
 print()
+
+print("    These strings tend to have a lot of extra whitespace, which you can remove by")
+print("    using the .stripped_strings generator instead:")
+print()
+print("      for string in soup.stripped_strings:")
+print("        print(repr(string))")
+print()
+for string in soup.stripped_strings:
+    print(f"      repr(string): {repr(string)}")
+                    # u"The Dormouse's story"
+                    # u"The Dormouse's story"
+                    # u'Once upon a time there were three little sisters; and their names were'
+                    # u'Elsie'
+                    # u','
+                    # u'Lacie'
+                    # u'and'
+                    # u'Tillie'
+                    # u';\nand they lived at the bottom of a well.'
+                    # u'...'
+print()
+print("    Here, strings consisting entirely of whitespace are ignored, and whitespace at")
+print("    the beginning and end of strings is removed.")
+print()
+print()
+print()
+print("2. Going up")
+print()
+print('   Continuing the “family tree” analogy, every tag and every string has a parent:')
+print("   the tag that contains it.")
+print()
+print("   .parent")
+print()
+print("     You can access an element’s parent with the .parent attribute. In the example")
+print('     “three sisters” document, the <head> tag is the parent of the <title> tag:')
+print()
+print("       title_tag = soup.title")
+title_tag = soup.title
+print(f"      title_tag: {title_tag}")   # <title>The Dormouse's story</title>
+print(f"      title_tag.parent: {title_tag.parent}") # <head><title>The Dormouse's story</title></head>
+print()
+print("    The title string itself has a parent: the <title> tag that contains it:")
+print()
+print(f"      title_tag.string.parent: {title_tag.string.parent}")   # <title>The Dormouse's story</title>
+print()
+print("    The parent of a top-level tag like <html> is the BeautifulSoup object itself:")
+print()
+print("      html_tag = soup.html")
+html_tag = soup.html
+print(f"      type(html_tag.parent): {type(html_tag.parent)}")   # <class 'bs4.BeautifulSoup'>
+print()
+print("    And the .parent of a BeautifulSoup object is defined as None:")
+print()
+print(f"      soup.parent: {soup.parent}") # None
+print()
+print()
+print("   .parents")
+print()
+print("    You can iterate over all of an element’s parents with .parents. This example")
+print("    uses .parents to travel from an <a> tag buried deep within the document, to")
+print("    the very top of the document:")
+print()
+print("      link = soup.a")
+link = soup.a
+print()
+print(f"      link: {link}")    # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+print()
+print("""      for parent in link.parents:
+        if parent is None:
+          print(parent)
+        else:
+          print(parent.name)
+""")
+for parent in link.parents:
+    if parent is None:
+        print(f"              parent: {parent}")
+    else:
+        print(f"            parent.name: {parent.name}")
+                        # p
+                        # body
+                        # html
+                        # [document]
+                        # None
+
+print("3. Going sideways")
+print()
