@@ -197,103 +197,106 @@ print(soup.b.prettify())    # <b>
 print()
 print()
 print()
-# # Navigating the tree
-# # Here’s the “Three sisters” HTML document again:
-# print("Navigation the tree")
-#
-# html_doc = """
-# <html><head><title>The Dormouse's story</title></head>
-# <body>
-# <p class="title"><b>The Dormouse's story</b></p>
-#
-# <p class="story">Once upon a time there were three little sisters; and their names were
-# <a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
-# <a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
-# <a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
-# and they lived at the bottom of a well.</p>
-#
+
+print("Navigating the tree")
+print()
+print("""Here’s the “Three sisters” HTML document again:""")
+
+html_doc = """
+<html><head><title>The Dormouse's story</title></head>
+<body>
+<p class="title"><b>The Dormouse's story</b></p>
+
+<p class="story">Once upon a time there were three little sisters; and their names were
+<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+and they lived at the bottom of a well.</p>
+
 # <p class="story">...</p>
 # """
-#
-# soup = BeautifulSoup(html_doc, 'html.parser')
-#
-# # I’ll use this as an example to show you how to move from one part of a
-# # document to another.
-#
-# # Going down
-# print("Going down")
-#
-# # Tags may contain strings and other tags. These elements are the tag’s
-# # children. Beautiful Soup provides a lot of different attributes for
-# # navigating and iterating over a tag’s children.
-#
-# # Note that Beautiful Soup strings don’t support any of these attributes,
-# # because a string can’t have children.
-#
-# # Navigating using tag names
-# print('1. Using tag names:')
-# # The simplest way to navigate the parse tree is to say the name of the tag
-# # you want. If you want the <head> tag, just say soup.head:
-# print(f"a.  {soup.head}")					# <head><title>The Dormouse's story</title></head>
-# print(f"b.  {soup.title}")					# <title>The Dormouse's story</title>
-# print()
-#
-# # You can do use this trick again and again to zoom in on a certain part of
-# # the parse tree. This code gets the first <b> tag beneath the <body> tag:
-# print(f"2. {soup.body.b}")					# <b>The Dormouse's story</b>
-#
-# # Using a tag name as an attribute will give you only the first tag by that name:
-# print(f"3. {soup.a}")		# <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
-#
-# # If you need to get all the <a> tags, or anything more complicated than the
-# # first tag with a certain name, you’ll need to use one of the methods
-# # described in Searching the tree, such as find_all():
-#
-# print(f"4. {soup.find_all('a')}")	# [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
-# 							#  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
-# 							#  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
-#
-# print()
-# print()
-#
-# # .contents and .children
-# print(".contents AND .children")
-#
-# # A tag’s children are available in a list called .contents:
-# head_tag = soup.head
-# print("soup.head")
-# print(f"1. {head_tag}")				# <head><title>The Dormouse's story</title></head>
-# print()
-# print("soup.head.contents")
-# print(f"2. {head_tag.contents}")	# [<title>The Dormouse's story</title>]
-# print()
-# title_tag = head_tag.contents[0]
-# print("soup.head.contents[0]")
-# print(f"3. {title_tag}")			# <title>The Dormouse's story</title>
-# print()
-# print("soup.head.contents.contents")
-# print(f"4. {title_tag.contents}")	# [u'The Dormouse's story']
-# print()
-#
-# # The BeautifulSoup object itself has children. In this case, the <html> tag
-# # is the child of the BeautifulSoup object.:
-# print("The BeautifulSoup object")
-# print(f"Len(soup.contents) = {len(soup.contents)}")				# 1
-# print(f"soup.contents[0] = {soup.contents[0].name}")	# None
-# print(f"soup.contents[1] = {soup.contents[1].name}")	# 'html'
-# print()
-#
-# # # A string does not have .contents, because it can’t contain anything:
-# # text = title_tag.contents[0]
-# # print(text.contents)			# AttributeError: 'NavigableString' object has no attribute 'contents'
-#
-# # Instead of getting them as a list, you can iterate over a tag’s children
-# # using the .children generator:
-# print("Iterating over a tag's children with .children")
-# for child in title_tag.children:
-#     print(child)					# The Dormouse's story
-# print()
-# print()
+
+print("   soup = BeautifulSoup(html_doc, 'html.parser')")
+soup = BeautifulSoup(html_doc, 'html.parser')
+
+print("   I’ll use this as an example to show you how to move from one part of a document to another.")
+print()
+print("1. Going down")
+print()
+print("   Tags may contain strings and other tags. These elements are the tag’s children.")
+print("   Beautiful Soup provides a lot of different attributes for navigating and")
+print("   iterating over a tag’s children.")
+print()
+print("   Note that Beautiful Soup strings don’t support any of these attributes, because a")
+print("   string can’t have children.")
+print()
+
+print("  Navigating using tag names")
+print('  a. Using tag names:')
+print("     The simplest way to navigate the parse tree is to say the name of the tag you")
+print("     want. If you want the <head> tag, just say soup.head:")
+print()
+print(f"     * soup.head: {soup.head}")					# <head><title>The Dormouse's story</title></head>
+print(f"     * soup.title: {soup.title}")					# <title>The Dormouse's story</title>
+print()
+print("   b. You can do use this trick again and again to zoom in on a certain part of the parse")
+print("      tree. This code gets the first <b> tag beneath the <body> tag:")
+print()
+print(f"      soup.body: {soup.body.b}")					# <b>The Dormouse's story</b>
+print()
+print("   c. Using a tag name as an attribute will give you only the first tag by that name:")
+print(f"      soup.a: {soup.a}")		# <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+print()
+print("   d. If you need to get all the <a> tags, or anything more complicated than the first")
+print("      tag with a certain name, you’ll need to use one of the methods described in")
+print("      Searching the tree, such as find_all():")
+print()
+print(f"      soup.find_all('a'): {soup.find_all('a')}")    # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+							                                #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+                                							#  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+print()
+print()
+print("  .contents and .children")
+print("  a. A tag’s children are available in a list called .contents:")
+print()
+print("     head_tag = soup.head")
+head_tag = soup.head
+print(f"     soup.head: {soup.head}")
+print(f"     head_tag: {head_tag}")				# <head><title>The Dormouse's story</title></head>
+print()
+print(f"     soup.head.contents: {soup.head.contents}")
+print(f"     head_tag.contents: {head_tag.contents}")	# [<title>The Dormouse's story</title>]
+print()
+print("     title_tag = head_tag.contents[0]")
+title_tag = head_tag.contents[0]
+print(f"     title_tag: {title_tag}")			# <title>The Dormouse's story</title>
+print()
+print(f"     title_tag.contents: {title_tag.contents}")
+print()
+
+print("     The BeautifulSoup object itself has children. In this case, the <html> tag")
+print("     is the child of the BeautifulSoup object.")
+print(f"     Len(soup.contents) = {len(soup.contents)}")	# 1
+print(f"     soup.contents[0] = {soup.contents[0].name}")	# None
+print(f"     soup.contents[1] = {soup.contents[1].name}")	# 'html'
+print()
+print("     A string does not have .contents, because it can’t contain anything:")
+print()
+print(f"     text = title_tag.contents[0]")
+text = title_tag.contents[0]
+print(f"     text.contents: {text.contents}") # AttributeError: 'NavigableString' object has no attribute 'contents'
+print()
+print("     Instead of getting them as a list, you can iterate over a tag’s children")
+print("     using the .children generator:")
+print()
+print("     Iterating over a tag's children with .children")
+print()
+print("       for child in title_tag.children:")
+print("         print(child)")
+for child in title_tag.children:
+    print(child)					# The Dormouse's story
+print()
+print()
 #
 #
 # # .descendants
