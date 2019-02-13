@@ -439,3 +439,9 @@ for parent in link.parents:
                 # None
 print('\n\n')
 print("3.  Going sideways\n")
+
+print("    Beautiful Soup defines a lot of methods for searching the parse tree, but they’re all very")
+print("    similar. I’m going to spend a lot of time explaining the two most popular methods: find()")
+print("    and find_all(). The other methods take almost exactly the same arguments, so I’ll just")
+print("    cover them briefly.\n")
+print("    Once again, I’ll be using the “three sisters” document as an example:")
