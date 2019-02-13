@@ -1,6 +1,30 @@
 # Beautiful Soup Documentation
 # https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
+print("Making the soup\n")
+print("    To parse a document, pass it into the BeautifulSoup constructor. You can pass in a")
+print("    string or an open filehandle:\n")
+
+print("""        from bs4 import BeautifulSoup
+        from bs4 import BeautifulSoup
+
+        with open("index.html") as fp:
+            soup = BeautifulSoup(fp)
+
+        soup = BeautifulSoup("<html>data</html>")
+        """)
+print()
+print("    First, the document is converted to Unicode, and HTML entities are converted to")
+print("    Unicode characters:\n")
+
+print("""        BeautifulSoup("Sacr&eacute; bleu!")
+        <html><head></head><body>Sacré bleu!</body></html>
+    """)
+print()
+print("    Beautiful Soup then parses the document using the best available parser. It will")
+print("    use an HTML parser unless you specifically tell it to use an XML parser.")
+print("    (See Parsing XML.)\n")
+
 # Import the BeautifulSoup library
 from bs4 import BeautifulSoup
 
@@ -65,7 +89,7 @@ print("              print(tag['id']): KeyError 'id'")
 print(f"              tag.get('id'): {tag.get('id')}\n\n\n")	#None
 
 
-print("        * Multi-valued attributes\n")
+print("        - Multi-valued attributes\n")
 
 print("           - HTML 4 defines a few attributes that can have multiple values. HTML 5 removes a couple of them,")
 print("             but defines a few more. The most common multi-valued attribute is class (that is, a tag can have")
@@ -440,8 +464,389 @@ for parent in link.parents:
 print('\n\n')
 print("3.  Going sideways\n")
 
+print("    Consider a simple document like this:")
+
+print('        sibling_soup = BeautifulSoup("<a><b>text1</b><c>text2</c></b></a>"\n')
+sibling_soup = BeautifulSoup("<a><b>text1</b><c>text2</c></b></a>", 'html.parser')
+
+print("        sibling_soup.prettify()")
+print(sibling_soup.prettify())
+            # <html>
+            #  <body>
+            #   <a>
+            #    <b>
+            #     text1
+            #    </b>
+            #    <c>
+            #     text2
+            #    </c>
+            #   </a>
+            #  </body>
+            # </html>
+print()
+
+print("    The <b> tag and the <c> tag are at the same level: they’re both direct children of the")
+print("    same tag. We call them siblings. When a document is pretty-printed, siblings show up at")
+print("    the same indentation level. You can also use this relationship in the code you write.\n")
+
+print("    a.  .next_sibling and .previous_sibling\n")
+
+print("        You can use .next_sibling and .previous_sibling to navigate between page elements")
+print("        that are on the same level of the parse tree:")
+print("            sibling_soup.b.next_sibling: {sibling_soup.b.next_sibling}")   # <c>text2</c>
+print("            sibling_soup.c.previous_sibling: {sibling_soup.c.previous_sibling}\n")   # <b>text1</b>
+
+print("        The <b> tag has a .next_sibling, but no .previous_sibling, because there’s nothing")
+print("        before the <b> tag on the same level of the tree. For the same reason, the <c> tag")
+print("        has a .previous_sibling but no .next_sibling:")
+
+print(f"            sibling_soup.b.previous_sibling: {sibling_soup.b.previous_sibling}")    # None
+print(f"            sibling_soup.c.next_sibling: {sibling_soup.c.next_sibling}\n")    # None
+
+print("        The strings “text1” and “text2” are not siblings, because they don’t have the same")
+print("        parent:")
+print(f"            sibling_soup.b.string: {sibling_soup.b.string}")    # u'text1'
+print(f"            sibling_soup.b.string.next_sibling: {sibling_soup.b.string.next_sibling}\n")    # None
+
+print("        In real documents, the .next_sibling or .previous_sibling of a tag will usually be")
+print("        a string containing whitespace. Going back to the “three sisters” document:")
+print("""            <a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>
+            <a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>
+            <a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>
+        """)
+print("        You might think that the .next_sibling of the first <a> tag would be the second")
+print("        <a> tag. But actually, it’s a string: the comma and newline that separate the")
+print("        first <a> tag from the second:")
+print("            link = soup.a")
+link = soup.a
+print(f"            link: {link}")    # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+print(f"            link.next_sibling: {link.next_sibling}\n")  # u',\n'
+
+print("        The second <a> tag is actually the .next_sibling of the comma:")
+print(f"            link.next_sibling.next_sibling: {link.next_sibling.next_sibling}\n")
+                # <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>
+
+print("    b.  .next_siblings and .previous_siblings\n")
+print("    You can iterate over a tag’s siblings with .next_siblings or .previous_siblings:\n")
+
+print("        for sibling in soup.a.next_siblings:")
+print("            print(repr(sibling))")
+for sibling in soup.a.next_siblings:
+    print(f"                {repr(sibling)}")
+        # u',\n'
+        # <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>
+        # u' and\n'
+        # <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+        # u'; and they lived at the bottom of a well.'
+        # None
+
+print('\n        for sibling in soup.find(id="link3").previous_siblings:')
+print("            print(repr(sibling))")
+for sibling in soup.find(id="link3").previous_siblings:
+    print(f"                {repr(sibling)}")
+        # ' and\n'
+        # <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>
+        # u',\n'
+        # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+        # u'Once upon a time there were three little sisters; and their names were\n'
+        # None
+
+print("4.  Going back and forth\n")
+print('    Take a look at the beginning of the “three sisters” document:')
+print("""        <html><head><title>The Dormouse's story</title></head>
+        <p class="title"><b>The Dormouse's story</b></p>
+    """)
+print("    An HTML parser takes this string of characters and turns it into a series of")
+print('    events: “open an <html> tag”, “open a <head> tag”, “open a <title> tag”, “add')
+print('    a string”, “close the <title> tag”, “open a <p> tag”, and so on. Beautiful Soup')
+print('    offers tools for reconstructing the initial parse of the document.\n')
+
+print("    a.  .next_element and .previous_element\n")
+print("        The .next_element attribute of a string or tag points to whatever was parsed")
+print("        immediately afterwards. It might be the same as .next_sibling, but it’s usually")
+print("        drastically different.\n")
+
+print("        Here’s the final <a> tag in the “three sisters” document. Its .next_sibling is a")
+print("        string: the conclusion of the sentence that was interrupted by the start of the")
+print("        <a> tag.:\n")
+
+print('            last_a_tag = soup.find("a", id="link3")')
+last_a_tag = soup.find("a", id="link3")
+
+print(f"            last_a_tag: {last_a_tag}")
+                # <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+print(f"            last_a_tag.next_sibling: {last_a_tag.next_sibling}\n")
+                # '; and they lived at the bottom of a well.'
+
+print("        But the .next_element of that <a> tag, the thing that was parsed immediately")
+print("""        after the <a> tag, is not the rest of that sentence: it’s the word “Tillie”:""")
+print(f"            last_a_tag.next_element: {last_a_tag.next_element}\n")    # u'Tillie'
+
+print("""        That’s because in the original markup, the word “Tillie” appeared before that
+        semicolon. The parser encountered an <a> tag, then the word “Tillie”, then
+        the closing </a> tag, then the semicolon and rest of the sentence. The semicolon
+        is on the same level as the <a> tag, but the word “Tillie” was encountered first.
+    """)
+
+print("        The .previous_element attribute is the exact opposite of .next_element.")
+print("        It points to whatever element was parsed immediately before this one:")
+print(f"            last_a_tag.previous_element: {last_a_tag.previous_element}")    # u' and\n'
+print(f"            last_a_tag.previous_element.next_element: {last_a_tag.previous_element.next_element}")
+                # <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+
+print("    b.  .next_elements and .previous_elements\n")
+print("        You should get the idea by now. You can use these iterators to move forward")
+print("        or backward in the document as it was parsed:")
+print("            for element in last_a_tag.next_elements:")
+print("                print(repr(element))")
+for element in last_a_tag.next_elements:
+    print(f"                    {repr(element)}")
+            # u'Tillie'
+            # u';\nand they lived at the bottom of a well.'
+            # u'\n\n'
+            # <p class="story">...</p>
+            # u'...'
+            # u'\n'
+            # None
+
+print("Searching the tree\n")
 print("    Beautiful Soup defines a lot of methods for searching the parse tree, but they’re all very")
 print("    similar. I’m going to spend a lot of time explaining the two most popular methods: find()")
 print("    and find_all(). The other methods take almost exactly the same arguments, so I’ll just")
 print("    cover them briefly.\n")
-print("    Once again, I’ll be using the “three sisters” document as an example:")
+print("    Once again, I’ll be using the “three sisters” document as an example:\n")
+print("""
+        <html><head><title>The Dormouse's story</title></head>
+        <body>
+        <p class="title"><b>The Dormouse's story</b></p>
+
+        <p class="story">Once upon a time there were three little sisters; and their names were
+        <a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+        <a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+        <a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+        and they lived at the bottom of a well.</p>
+
+        <p class="story">...</p>
+""")
+
+html_doc = """
+<html><head><title>The Dormouse's story</title></head>
+<body>
+<p class="title"><b>The Dormouse's story</b></p>
+
+<p class="story">Once upon a time there were three little sisters; and their names were
+<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+and they lived at the bottom of a well.</p>
+
+<p class="story">...</p>
+"""
+print("        soup = BeautifulSoup(html_doc, 'html.parser')\n")
+soup = BeautifulSoup(html_doc, 'html.parser')
+
+print("    By passing in a filter to an argument like find_all(), you can zoom in on the parts")
+print("    of the document you’re interested in.\n")
+
+print("1.  Kinds of filters\n")
+print("""    Before talking in detail about find_all() and similar methods, I want to show
+    examples of different filters you can pass into these methods. These filters show
+    up again and again, throughout the search API. You can use them to filter based on
+    a tag’s name, on its attributes, on the text of a string, or on some combination
+    of these.
+    """)
+print("    a.  A string\n")
+print("        The simplest filter is a string. Pass a string to a search method and Beautiful")
+print("        Soup will perform a match against that exact string. This code finds all the")
+print("        <b> tags in the document:")
+print(f"            soup.find_all('b'): {soup.find_all('b')}\n")  # [<b>The Dormouse's story</b>]
+
+print("        If you pass in a byte string, Beautiful Soup will assume the string is encoded as")
+print("        UTF-8. You can avoid this by passing in a Unicode string instead.\n")
+
+print("    b.  A regular expression\n")
+print("""        If you pass in a regular expression object, Beautiful Soup will filter against
+        that regular expression using its search() method. This code finds all the tags whose names
+        start with the letter “b”; in this case, the <body> tag and the <b> tag:
+    """)
+print("""            import re
+            for tag in soup.find_all(re.compile("^b")):
+                print(tag.name)
+    """)
+import re
+for tag in soup.find_all(re.compile("^b")):
+    print(f"                    {tag.name}")
+                # body
+                # b
+print("\n            This code finds all the tags whose names contain the letter ‘t’:")
+
+for tag in soup.find_all(re.compile("t")):
+    print(f"                    {tag.name}")
+                # html
+                # title
+
+print("\n    c.  A list\n")
+print("        If you pass in a list, Beautiful Soup will allow a string match against any item")
+print("        in that list. This code finds all the <a> tags and all the <b> tags:\n")
+
+print(f'            soup.find_all(["a","b"]): {soup.find_all(["a","b"])}\n')
+            # [<b>The Dormouse's story</b>,
+            #  <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("        True\n")
+print("        The value True matches everything it can. This code finds all the tags in the")
+print("        document, but none of the text strings:")
+print("            for tag in soup.find_all(True):")
+print("                print(tag.name)")
+for tag in soup.find_all(True):
+    print(f"                {tag.name}")
+                # html
+                # head
+                # title
+                # body
+                # p
+                # b
+                # p
+                # a
+                # a
+                # a
+                # p
+
+print("\n    d.  A function")
+print("        If none of the other matches work for you, define a function that takes an")
+print("        element as its only argument. The function should return True if the")
+print("        argument matches, and False otherwise.\n")
+
+print("        Here’s a function that returns True if a tag defines the “class” attribute")
+print("        but doesn’t define the “id” attribute:\n")
+
+print("""            def has_class_but_no_id(tag):
+                return tag.has_attr('class') and not tag.has_attr('id')
+    """)
+def has_class_but_no_id(tag):
+    return tag.has_attr('class') and not tag.has_attr('id')
+
+print("        Pass this function into find_all() and you’ll pick up all the <p> tags:")
+print("            soup.find_all(has_class_but_no_id)")
+print(soup.find_all(has_class_but_no_id))
+            # [<p class="title"><b>The Dormouse's story</b></p>,
+            #  <p class="story">Once upon a time there were...</p>,
+            #  <p class="story">...</p>]
+print("\n        This function only picks up the <p> tags. It doesn’t pick up the <a> tags,")
+print("        because those tags define both “class” and “id”. It doesn’t pick up tags like")
+print('        <html> and <title>, because those tags don’t define “class”.\n')
+
+print("""        If you pass in a function to filter on a specific attribute like href, the
+        argument passed into the function will be the attribute value, not the whole tag. Here’s
+        a function that finds all a tags whose href attribute does not match a regular expression:
+            def not_lacie(href):
+                return href and not re.compile("lacie").search(href)
+            soup.find_all(href=not_lacie)
+    """)
+
+def not_lacie(href):
+    return href and not re.compile("lacie").search(href)
+print(f"                {soup.find_all(href=not_lacie)}")
+                # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+                #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("""
+        The function can be as complicated as you need it to be. Here’s a function")
+        that returns True if a tag is surrounded by string objects:
+
+            from bs4 import NavigableString
+            def surrounded_by_strings(tag):
+                return (isinstance(tag.next_element, NavigableString)
+                        and isinstance(tag.previous_element, NavigableString))
+
+            for tag in soup.find_all(surrounded_by_strings):
+            print tag.name
+        """)
+from bs4 import NavigableString
+def surrounded_by_strings(tag):
+    return (isinstance(tag.next_element, NavigableString)
+            and isinstance(tag.previous_element, NavigableString))
+
+for tag in soup.find_all(surrounded_by_strings):
+    print(f"                {tag.name}")
+            # p
+            # a
+            # a
+            # a
+            # p
+
+print("\n        Now we’re ready to look at the search methods in detail.\n")
+
+print("2.  find_all()\n")
+print("    Signature: find_all(name, attrs, recursive, string, limit, **kwargs)\n")
+
+print("    The find_all() method looks through a tag’s descendants and retrieves all descendants")
+print("    that match your filters. I gave several examples in Kinds of filters, but here are a")
+print("    few more:")
+print(f'        soup.find_all("title"): {soup.find_all("title")}')
+            # [<title>The Dormouse's story</title>]
+print(f'        soup.find_all("p", "title"): {soup.find_all("p", "title")}')
+            # [<p class="title"><b>The Dormouse's story</b></p>]
+print(f'        soup.find_all("a"): {soup.find_all("a")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+print(f'        soup.find_all(id="link2"): {soup.find_all(id="link2")}')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+
+print("        import re")
+print(f'            soup.find(string=re.compile("sisters")): {soup.find(string=re.compile("sisters"))}')
+            # u'Once upon a time there were three little sisters; and their names were\n'
+
+print("""    Some of these should look familiar, but others are new. What does it mean to pass
+    in a value for string, or id? Why does find_all("p", "title") find a <p> tag with the CSS
+    class “title”? Let’s look at the arguments to find_all().
+    """)
+
+print("    a.  The name argument\n")
+print("        Pass in a value for name and you’ll tell Beautiful Soup to only consider tags")
+print("        with certain names. Text strings will be ignored, as will tags whose names")
+print("        that don’t match.\n")
+
+print("        This is the simplest usage:")
+print(f'            soup.find_all("title"): {soup.find_all("title")}\n')
+            # [<title>The Dormouse's story</title>]
+
+print("        Recall from Kinds of filters that the value to name can be a string, a regular")
+print("        expression, a list, a function, or the value True.\n")
+
+print("    b.  The keyword arguments\n")
+print("""        Any argument that’s not recognized will be turned into a filter on one of a tag’s
+        attributes. If you pass in a value for an argument called id, Beautiful Soup will filter
+        against each tag’s ‘id’ attribute:""")
+print(f"            soup.find_all(id='link2'): {soup.find_all(id='link2')}")
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+
+print("\n        If you pass in a value for href, Beautiful Soup will filter against each")
+print("        tag’s ‘href’ attribute:")
+print(f'            soup.find_all(href=re.compile("elsie")): {soup.find_all(href=re.compile("elsie"))}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>]
+
+print("\n        You can filter an attribute based on a string, a regular expression, a list,")
+print("        a function, or the value True.\n")
+print("        This code finds all tags whose id attribute has a value, regardless of what the")
+print("        value is:")
+print(f"            soup.find_all(id=True): {soup.find_all(id=True)}")
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("\n        You can filter multiple attributes at once by passing in more than one")
+print("        keyword argument:")
+print(f"            soup.find_all(href=re.compile('elsie'), id='link1'): {soup.find_all(href=re.compile('elsie'), id='link1')}")
+                    # [<a class="sister" href="http://example.com/elsie" id="link1">three</a>]
+
+print("\n        Some attributes, like the data-* attributes in HTML 5, have names that can’t")
+print("        be used as the names of keyword arguments:\n")
+print("""            data_soup = BeautifulSoup('<div data-foo="value">foo!</div>')""")
+data_soup = BeautifulSoup('<div data-foo="value">foo!</div>')
+print(f'                data_soup.find_all(data-foo="value")', end=': ')
+data_soup.find_all(data-foo="value")
+            # SyntaxError: keyword can't be an expression
