@@ -447,7 +447,7 @@ for parent in link.parents:
     if parent is None:
         print(f"              parent: {parent}")
     else:
-        print(f"            parent.name: {parent.name}")
+        print(f"           {parent.name}")
                         # p
                         # body
                         # html
@@ -456,3 +456,191 @@ for parent in link.parents:
 
 print("3. Going sideways")
 print()
+print("   Consider a simple document like this:")
+print()
+print('     sibling_soup = BeautifulSoup("<a><b>text1</b><c>text2</c></b></a>")')
+sibling_soup = BeautifulSoup("<a><b>text1</b><c>text2</c></b></a>", 'html.parser')
+print("     print(sibling_soup.prettify())")
+print(sibling_soup.prettify())
+                    # <html>
+                    #  <body>
+                    #   <a>
+                    #    <b>
+                    #     text1
+                    #    </b>
+                    #    <c>
+                    #     text2
+                    #    </c>
+                    #   </a>
+                    #  </body>
+                    # </html>
+print("     The <b> tag and the <c> tag are at the same level: they’re both direct")
+print("     children of the same tag. We call them siblings. When a document is")
+print("     pretty-printed, siblings show up at the same indentation level. You can")
+print("     also use this relationship in the code you write.")
+print()
+print()
+print("a. .next_sibling and .previous_sibling")
+print()
+print("  You can use .next_sibling and .previous_sibling to navigate between")
+print("  page elements that are on the same level of the parse tree:")
+print()
+print(f"    sibling_soup.b.next_sibling: {sibling_soup.b.next_sibling}")     # <c>text2</c>
+print(f"    sibling_soup.c.previous_sibling: {sibling_soup.c.previous_sibling}")    # <b>text1</b>
+print()
+print("  The <b> tag has a .next_sibling, but no .previous_sibling, because there’s")
+print("  nothing before the <b> tag on the same level of the tree. For the same reason,")
+print("  the <c> tag has a .previous_sibling but no .next_sibling:")
+print()
+print(f"    sibling_soup.b.previous_sibling: {sibling_soup.b.previous_sibling}")    # None
+print(f"    sibling_soup.c.next_sibling: {sibling_soup.c.next_sibling}")    # None
+print()
+print("  The strings “text1” and “text2” are not siblings, because they don’t have the")
+print("  same parent:")
+print()
+print(f"    sibling_soup.b.string: {sibling_soup.b.string}")    # u'text1'
+print(f"    sibling_soup.b.string.next_sibling: {sibling_soup.b.string.next_sibling}")  # None
+print()
+print("  In real documents, the .next_sibling or .previous_sibling of a tag will")
+print('  usually be a string containing whitespace. Going back to the “three')
+print('  sisters” document:')
+print()
+print("""    <a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>
+    <a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>
+    <a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>""")
+print()
+print("  You might think that the .next_sibling of the first <a> tag would be the")
+print("  second <a> tag. But actually, it’s a string: the comma and newline that")
+print("  separate the first <a> tag from the second:")
+print()
+print("    link = soup.a")
+link = soup.a
+print(f"      link: {link}")    # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+print()
+print(f"      link.next_sibling: {link.next_sibling}")  # u',\n'
+print()
+print("  The second <a> tag is actually the .next_sibling of the comma:")
+print()
+print(f"    link.next_sibling.next_sibling: {link.next_sibling.next_sibling}")
+            # <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>
+print()
+print("b. .next_siblings and .previous_siblings")
+print()
+print("  You can iterate over a tag’s siblings with .next_siblings or .previous_siblings:")
+print()
+print("    for sibling in soup.a.next_siblings:")
+print("      print(repr(sibling))")
+for sibling in soup.a.next_siblings:
+    print(f"        {repr(sibling)}")
+                    # u',\n'
+                    # <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>
+                    # u' and\n'
+                    # <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+                    # u'; and they lived at the bottom of a well.'
+                    # None
+
+print()
+print('    for sibling in soup.find(id="link3").previous_siblings:')
+print("      print(repr(sibling))")
+print()
+for sibling in soup.find(id="link3").previous_siblings:
+    print(f"        {repr(sibling)}")
+            # ' and\n'
+            # <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>
+            # u',\n'
+            # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+            # u'Once upon a time there were three little sisters; and their names were\n'
+            # None
+print()
+print()
+print("4. Going back and forth")
+print()
+print("   Take a look at the beginning of the “three sisters” document:\n")
+print("""     <html><head><title>The Dormouse's story</title></head>
+     <p class="title"><b>The Dormouse's story</b></p>\n
+   """)
+print("   An HTML parser takes this string of characters and turns it into a series")
+print('   of events: “open an <html> tag”, “open a <head> tag”, “open a <title> tag”,')
+print('   “add a string”, “close the <title> tag”, “open a <p> tag”, and so on.')
+print("   Beautiful Soup offers tools for reconstructing the initial parse of the document.")
+print()
+print("   .next_element and .previous_element\n")
+
+print("    The .next_element attribute of a string or tag points to whatever was parsed")
+print("    immediately afterwards. It might be the same as .next_sibling, but it’s")
+print("    usually drastically different.\n")
+
+print("""    Here’s the final <a> tag in the “three sisters” document. Its .next_sibling
+    is a string: the conclusion of the sentence that was interrupted by the start
+    of the <a> tag.:\n""")
+
+print('      last_a_tag = soup.find("a", id="link3")')
+last_a_tag = soup.find("a", id="link3")
+print(f"        last_a_tag: {last_a_tag}")   # <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+print(f"        last_a_tag.next_sibling: {last_a_tag.next_sibling}")    # '; and they lived at the bottom of a well.'
+
+print("\n    But the .next_element of that <a> tag, the thing that was parsed")
+print("""    immediately after the <a> tag, is not the rest of that sentence: it’s the word “Tillie”:""")
+
+print(f"\n      last_a_tag.next_element: {last_a_tag.next_element}\n")    # u'Tillie'
+
+print("""    That’s because in the original markup, the word “Tillie” appeared before
+    that semicolon. The parser encountered an <a> tag, then the word “Tillie”,
+    then the closing </a> tag, then the semicolon and rest of the sentence. The
+    semicolon is on the same level as the <a> tag, but the word “Tillie” was
+    encountered first.\n
+    """)
+
+print("    The .previous_element attribute is the exact opposite of .next_element.")
+print("    It points to whatever element was parsed immediately before this one:\n")
+
+print(f"      last_a_tag.previous_element: {last_a_tag.previous_element}")  # u' and\n'
+print(f"      last_a_tag.previous_element.next_element: {last_a_tag.previous_element.next_element}\n")
+                # <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+
+print("  a. .next_elements and .previous_elements\n")
+print("     You should get the idea by now. You can use these iterators to move forward")
+print("     or backward in the document as it was parsed:\n")
+
+print("       for element in last_a_tag.next_elements:")
+print("          print(repr(element))\n")
+
+for element in last_a_tag.next_elements:
+    print(f"        {repr(element)}")
+                    # u'Tillie'
+                    # u';\nand they lived at the bottom of a well.'
+                    # u'\n\n'
+                    # <p class="story">...</p>
+                    # u'...'
+                    # u'\n'
+                    # None
+print('\n\n\n')
+
+print("Searching the tree\n")
+
+print("""Beautiful Soup defines a lot of methods for searching the parse tree, but
+they’re all very similar. I’m going to spend a lot of time explaining the two
+most popular methods: find() and find_all(). The other methods take almost exactly
+the same arguments, so I’ll just cover them briefly.
+
+Once again, I’ll be using the “three sisters” document as an example:
+
+""")
+html_doc = """
+<html><head><title>The Dormouse's story</title></head>
+<body>
+<p class="title"><b>The Dormouse's story</b></p>
+
+<p class="story">Once upon a time there were three little sisters; and their names were
+<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+and they lived at the bottom of a well.</p>
+
+<p class="story">...</p>
+"""
+# from bs4 import BeautifulSoup
+soup = BeautifulSoup(html_doc, 'html.parser')
+
+print("By passing in a filter to an argument like find_all(), you can zoom in on the")
+print("parts of the document you’re interested in.")
