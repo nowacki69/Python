@@ -846,7 +846,130 @@ print(f"            soup.find_all(href=re.compile('elsie'), id='link1'): {soup.f
 print("\n        Some attributes, like the data-* attributes in HTML 5, have names that can’t")
 print("        be used as the names of keyword arguments:\n")
 print("""            data_soup = BeautifulSoup('<div data-foo="value">foo!</div>')""")
-data_soup = BeautifulSoup('<div data-foo="value">foo!</div>')
-print(f'                data_soup.find_all(data-foo="value")', end=': ')
-data_soup.find_all(data-foo="value")
-            # SyntaxError: keyword can't be an expression
+data_soup = BeautifulSoup('<div data-foo="value">foo!</div>',"html.parser")
+print(f'                data_soup.find_all(data-foo="value")')
+print("                      # SyntaxError: keyword can't be an expression")
+print('\n\n')
+print("    c.  Searching by CSS class\n")
+print("""        It’s very useful to search for a tag that has a certain CSS class, but the name of the CSS attribute,
+        “class”, is a reserved word in Python. Using class as a keyword argument will give you a syntax error. As of
+        Beautiful Soup 4.1.2, you can search by CSS class using the keyword argument class_:""")
+print(f'            soup.find_all("a", class_="sister"): {soup.find_all("a", class_="sister")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("\n        As with any keyword argument, you can pass class_ a string, a regular expression,")
+print("        a function, or True:")
+print(f'            soup.find_all(class_=re.compile("itl")): {soup.find_all(class_=re.compile("itl"))}')
+            # [<p class="title"><b>The Dormouse's story</b></p>]
+
+print("            def has_six_characters(css_class):")
+print("                return css_class is not None and len(css_class) == 6")
+def has_six_characters(css_class):
+    return css_class is not None and len(css_class) == 6
+
+print(f"                    {soup.find_all(class_=has_six_characters)}")
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("\n        Remember that a single tag can have multiple values for its “class” attribute. When you search for a")
+print("        tag that matches a certain CSS class, you’re matching against any of its CSS classes:")
+print("""            css_soup = BeautifulSoup('<p class="body strikeout"></p>')""")
+css_soup = BeautifulSoup('<p class="body strikeout"></p>',"html.parser")
+print(f'                css_soup.find_all("p", class_="strikeout"): {css_soup.find_all("p", class_="strikeout")}')
+            # [<p class="body strikeout"></p>]
+print(f'                css_soup.find_all("p", class_="body"): {css_soup.find_all("p", class_="body")}')
+            # [<p class="body strikeout"></p>]
+
+print("\n        You can also search for the exact string value of the class attribute:")
+print(f'            css_soup.find_all("p", class_="body strikeout"): {css_soup.find_all("p", class_="body strikeout")}')
+            # [<p class="body strikeout"></p>]
+
+print("\n        But searching for variants of the string value won’t work:")
+print(f'            css_soup.find_all("p", class_="strikeout body"): {css_soup.find_all("p", class_="strikeout body")}')
+            # []
+
+print("        If you want to search for tags that match two or more CSS classes, you should use a CSS selector:")
+print(f'            css_soup.select("p.strikeout.body"): {css_soup.select("p.strikeout.body")}')
+            # [<p class="body strikeout"></p>]
+
+print("""\n        In older versions of Beautiful Soup, which don’t have the class_ shortcut, you can use the
+        attrs trick mentioned above. Create a dictionary whose value for “class” is the string (or regular expression,
+        or whatever) you want to search for:""")
+
+print('            soup.find_all("a", attrs={"class": "sister"}', end=': ')
+answer = soup.find_all("a", attrs={"class": "sister"})
+print(answer)
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("""\n\n    d.  The string argument\n
+        With string you can search for strings instead of tags. As with name and the keyword arguments, you")
+        can pass in a string, a regular expression, a list, a function, or the value True.")
+        Here are some examples:
+        """)
+
+print(f'            soup.find_all(string="Elsie"): {soup.find_all(string="Elsie")}')    # [u'Elsie']
+print(f'            soup.find_all(string=["Tillie", "Elsie", "Lacie"]): {soup.find_all(string=["Tillie", "Elsie", "Lacie"])}')
+            # [u'Elsie', u'Lacie', u'Tillie']
+print(f'            soup.find_all(string=re.compile("Dormouse")): {soup.find_all(string=re.compile("Dormouse"))}')
+            # [u"The Dormouse's story", u"The Dormouse's story"]
+
+def is_the_only_string_within_a_tag(s):
+    """Return True if this string is the only child of its parent tag."""
+    return (s == s.parent.string)
+
+print(f'            soup.find_all(string=is_the_only_string_within_a_tag): {soup.find_all(string=is_the_only_string_within_a_tag)}')
+            # [u"The Dormouse's story", u"The Dormouse's story", u'Elsie', u'Lacie', u'Tillie', u'...']
+
+print("""\n        Although string is for finding strings, you can combine it with arguments that find tags: Beautiful
+        Soup will print("find all tags whose .string matches your value for string. This code finds the <a> tags whose
+        .string is “Elsie”:""")
+
+print(f'            soup.find_all("a", string="Elsie"): {soup.find_all("a", string="Elsie")}')
+            # [<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>]
+
+print("\n        The string argument is new in Beautiful Soup 4.4.0. In earlier versions it was called text:")
+print(f'            soup.find_all("a", text="Elsie"): {soup.find_all("a", text="Elsie")}')
+            # [<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>]
+
+print("\n\n    e.  The limit argument\n")
+print("""        find_all() returns all the tags and strings that match your filters. This can take a while if the
+        document is large. If you don’t need all the results, you can pass in a number for limit. This works just like
+        the LIMIT keyword in SQL. It tells Beautiful Soup to stop gathering results after it’s found a certain number.
+    """)
+print('        There are three links in the “three sisters” document, but this code only finds the first two:')
+print(f'            soup.find_all("a", limit=2): {soup.find_all("a", limit=2)}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+
+print("\n\n    f.  The recursive argument\n")
+print("""        If you call mytag.find_all(), Beautiful Soup will examine all the descendants of mytag: its children,
+        its children’s children, and so on. If you only want Beautiful Soup to consider direct children, you can pass
+        in recursive=False. See the difference here:""")
+print(f'            soup.html.find_all("title"): {soup.html.find_all("title")}')
+            # [<title>The Dormouse's story</title>]
+print(f'            soup.html.find_all("title", recursive=False): {soup.html.find_all("title", recursive=False)}')
+            # []
+print("""        Here’s that part of the document:
+
+        <html>
+         <head>
+          <title>
+           The Dormouse's story
+          </title>
+         </head>
+        ...
+
+        The <title> tag is beneath the <html> tag, but it’s not directly beneath the <html> tag: the <head> tag is
+        in the way. Beautiful Soup finds the <title> tag when it’s allowed to look at all descendants of the <html>
+        tag, but when recursive=False restricts it to the <html> tag’s immediate children, it finds nothing.
+
+        Beautiful Soup offers a lot of tree-searching methods (covered below), and they mostly take the same
+        arguments as find_all(): name, attrs, string, limit, and the keyword arguments. But the recursive argument
+        is different: find_all() and find() are the only methods that support it. Passing recursive=False into a
+        method like find_parents() wouldn’t be very useful.
+    """)
