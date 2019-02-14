@@ -840,7 +840,8 @@ print(f"            soup.find_all(id=True): {soup.find_all(id=True)}")
 
 print("\n        You can filter multiple attributes at once by passing in more than one")
 print("        keyword argument:")
-print(f"            soup.find_all(href=re.compile('elsie'), id='link1'): {soup.find_all(href=re.compile('elsie'), id='link1')}")
+print(f"            soup.find_all(href=re.compile('elsie'), id='link1'): \
+                    {soup.find_all(href=re.compile('elsie'), id='link1')}")
                     # [<a class="sister" href="http://example.com/elsie" id="link1">three</a>]
 
 print("\n        Some attributes, like the data-* attributes in HTML 5, have names that can’t")
@@ -913,7 +914,8 @@ print("""\n\n    d.  The string argument\n
         """)
 
 print(f'            soup.find_all(string="Elsie"): {soup.find_all(string="Elsie")}')    # [u'Elsie']
-print(f'            soup.find_all(string=["Tillie", "Elsie", "Lacie"]): {soup.find_all(string=["Tillie", "Elsie", "Lacie"])}')
+print(f'            soup.find_all(string=["Tillie", "Elsie", "Lacie"]): \
+                    {soup.find_all(string=["Tillie", "Elsie", "Lacie"])}')
             # [u'Elsie', u'Lacie', u'Tillie']
 print(f'            soup.find_all(string=re.compile("Dormouse")): {soup.find_all(string=re.compile("Dormouse"))}')
             # [u"The Dormouse's story", u"The Dormouse's story"]
@@ -922,7 +924,8 @@ def is_the_only_string_within_a_tag(s):
     """Return True if this string is the only child of its parent tag."""
     return (s == s.parent.string)
 
-print(f'            soup.find_all(string=is_the_only_string_within_a_tag): {soup.find_all(string=is_the_only_string_within_a_tag)}')
+print(f'            soup.find_all(string=is_the_only_string_within_a_tag): \
+                    {soup.find_all(string=is_the_only_string_within_a_tag)}')
             # [u"The Dormouse's story", u"The Dormouse's story", u'Elsie', u'Lacie', u'Tillie', u'...']
 
 print("""\n        Although string is for finding strings, you can combine it with arguments that find tags: Beautiful
@@ -973,3 +976,828 @@ print("""        Here’s that part of the document:
         is different: find_all() and find() are the only methods that support it. Passing recursive=False into a
         method like find_parents() wouldn’t be very useful.
     """)
+
+print("3.  Calling a tag is like calling find_all()\n")
+print("""    Because find_all() is the most popular method in the Beautiful Soup search API, you
+    can use a shortcut for it. If you treat the BeautifulSoup object or a Tag object as though it
+    were a function, then it’s the same as calling find_all() on that object. These two lines of
+    code are equivalent:""")
+print(f'        soup.find_all("a"): {soup.find_all("a")}')
+print(f'        soup("a"): {soup("a")}\n')
+
+print("    These two lines are also equivalent:")
+print(f"        soup.title.find_all(string=True): {soup.title.find_all(string=True)}")
+print(f"        soup.title(string=True): {soup.title(string=True)}\n\n")
+
+print("4.  find()\n")
+print("    Signature: find(name, attrs, recursive, string, **kwargs)\n")
+
+print("""    The find_all() method scans the entire document looking for results, but sometimes
+    you only want to find one result. If you know a document only has one <body> tag, it’s a
+    waste of time to scan the entire document looking for more. Rather than passing in limit=1
+    every time you call find_all, you can use the find() method. These two lines of code are
+    nearly equivalent:""")
+print(f"        soup.find_all('title', limit=1 : {soup.find_all('title', limit=1)}")
+            # [<title>The Dormouse's story</title>]
+print(f"        soup.find('title') : {soup.find('title')}\n")
+            # <title>The Dormouse's story</title>
+
+print("    The only difference is that find_all() returns a list containing the single result,")
+print("    and find() just returns the result.\n")
+
+print("    If find_all() can’t find anything, it returns an empty list. If find() can’t")
+print("    find anything, it returns None:")
+print(f'        soup.find("nosuchtag") : {soup.find("nosuchtag")}\n')
+            # None
+
+print("    Remember the soup.head.title trick from Navigating using tag names? That trick")
+print("    works by repeatedly calling find():")
+print(f"        soup.head.title : {soup.head.title}")
+            # <title>The Dormouse's story</title>
+print(f'        soup.find("head").find("title") : {soup.find("head").find("title")}\n\n')
+            # <title>The Dormouse's story</title>
+
+print("5.  find_parents() and find_parent()\n")
+print("    Signature: find_parents(name, attrs, string, limit, **kwargs)")
+print("    Signature: find_parent(name, attrs, string, **kwargs)")
+
+print("""    I spent a lot of time above covering find_all() and find(). The Beautiful Soup API
+    defines ten other methods for searching the tree, but don’t be afraid. Five of these methods
+    are basically the same as find_all(), and the other five are basically the same as find().
+    The only differences are in what parts of the tree they search.
+
+    First let’s consider find_parents() and find_parent(). Remember that find_all() and find()
+    work their way down the tree, looking at tag’s descendants. These methods do the opposite:
+    they work their way up the tree, looking at a tag’s (or a string’s) parents. Let’s try them
+    out, starting from a string buried deep in the “three daughters” document:""")
+print('        a_string = soup.find(string="Lacie")')
+a_string = soup.find(string="Lacie")
+print(f'            a_string : {a_string}')
+            # u'Lacie'
+print(f'        a_string.find_parents("a") : {a_string.find_parents("a")}')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+print(f'        a_string.find_parent("p") : {a_string.find_parent("p")}')
+            # <p class="story">Once upon a time there were three little sisters; and their names were
+            #  <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a> and
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>;
+            #  and they lived at the bottom of a well.</p>
+
+print(f'            a_string.find_parents("p", class_="title") : {a_string.find_parents("p", class_="title")}')
+            # []
+
+print("""    One of the three <a> tags is the direct parent of the string in question, so our
+    search finds it. One of the three <p> tags is an indirect parent of the string, and our
+    search finds that as well. There’s a <p> tag with the CSS class “title” somewhere in the
+    document, but it’s not one of this string’s parents, so we can’t find it with find_parents().
+
+    You may have made the connection between find_parent() and find_parents(), and the
+    .parent and .parents attributes mentioned earlier. The connection is very strong. These
+    search methods actually use .parents to iterate over all the parents, and check each one
+    against the provided filter to see if it matches.\n\n""")
+
+print("""6.  find_next_siblings() and find_next_sibling()
+    Signature: find_next_siblings(name, attrs, string, limit, **kwargs)
+    Signature: find_next_sibling(name, attrs, string, **kwargs)
+
+    These methods use .next_siblings to iterate over the rest of an element’s siblings in the tree. The
+    find_next_siblings() method returns all the siblings that match, and find_next_sibling() only returns
+    the first one:
+
+        first_link = soup.a""")
+first_link = soup.a
+print(f"        first_link : {first_link}")
+            # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+
+print(f'        first_link.find_next_siblings("a") : {first_link.find_next_siblings("a")}\n')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+print('        first_story_paragraph = soup.find("p", "story")')
+
+first_story_paragraph = soup.find("p", "story")
+print(f'        first_story_paragraph.find_next_sibling("p") : {first_story_paragraph.find_next_sibling("p")}')
+            # <p class="story">...</p>
+
+
+print("7.  find_previous_siblings() and find_previous_sibling()\n")
+print("    Signature: find_previous_siblings(name, attrs, string, limit, **kwargs)")
+print("    Signature: find_previous_sibling(name, attrs, string, **kwargs)\n")
+
+print("""    These methods use .previous_siblings to iterate over an element’s siblings that precede it in the tree.")
+    The find_previous_siblings() method returns all the siblings that match, and find_previous_sibling() only returns
+    the first one:
+    """)
+
+print('        last_link = soup.find("a", id="link3")')
+last_link = soup.find("a", id="link3")
+print(f"        last_link : {last_link}")
+            # <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+print(f'        last_link.find_previous_siblings("a") : \
+                {last_link.find_previous_siblings("a")}\n')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>]
+
+print('        first_story_paragraph = soup.find("p", "story")')
+first_story_paragraph = soup.find("p", "story")
+print(f'        first_story_paragraph.find_previous_sibling("p") : {first_story_paragraph.find_previous_sibling("p")}\n\n')
+            # <p class="title"><b>The Dormouse's story</b></p>
+
+print("""8.  find_all_next() and find_next()
+    Signature: find_all_next(name, attrs, string, limit, **kwargs)
+    Signature: find_next(name, attrs, string, **kwargs)
+
+    These methods use .next_elements to iterate over whatever tags and strings that come after it in the document.
+    The find_all_next() method returns all matches, and find_next() only returns the first match:
+
+        first_link = soup.a""")
+first_link = soup.a
+print(f"        first_link : {first_link}")
+            # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+print("        first_link.find_all_next(string=True) : ", end='')
+print(first_link.find_all_next(string=True))
+            # [u'Elsie', u',\n', u'Lacie', u' and\n', u'Tillie',
+            #  u';\nand they lived at the bottom of a well.', u'\n\n', u'...', u'\n']
+print(f'        first_link.find_next("p") : {first_link.find_next("p")}\n')
+            # <p class="story">...</p>
+
+print("""    In the first example, the string “Elsie” showed up, even though it was contained within the <a> tag we
+    started from. In the second example, the last <p> tag in the document showed up, even though it’s not in the same
+    part of the tree as the <a> tag we started from. For these methods, all that matters is that an element match the
+    filter, and show up later in the document than the starting element.
+
+
+    """)
+
+print("""9.  find_all_previous() and find_previous()
+
+    Signature: find_all_previous(name, attrs, string, limit, **kwargs)
+    Signature: find_previous(name, attrs, string, **kwargs)
+
+    These methods use .previous_elements to iterate over the tags and strings that came before it in the document.
+    The find_all_previous() method returns all matches, and find_previous() only returns the first match:
+
+        first_link = soup.a""")
+first_link = soup.a
+print(f"        first_link : {first_link}")
+            # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+print('        first_link.find_all_previous("p")')
+print(first_link.find_all_previous("p"))
+            # [<p class="story">Once upon a time there were three little sisters; ...</p>,
+            #  <p class="title"><b>The Dormouse's story</b></p>]
+print(f'\n        first_link.find_previous("title") : {first_link.find_previous("title")}\n')
+            # <title>The Dormouse's story</title>
+
+print("""    The call to find_all_previous("p") found the first paragraph in the document (the one with class=”title”),
+    but it also finds the second paragraph, the <p> tag that contains the <a> tag we started with. This shouldn’t be
+    too surprising: we’re looking at all the tags that show up earlier in the document than the one we started with.
+    A <p> tag that contains an <a> tag must have shown up before the <a> tag it contains.
+
+    """)
+
+print("""10. CSS selectors
+
+    As of version 4.7.0, Beautiful Soup supports most CSS4 selectors via the SoupSieve project. If you installed
+    Beautiful Soup through pip, SoupSieve was installed at the same time, so you don’t have to do anything extra.
+
+    BeautifulSoup has a .select() method which uses SoupSieve to run a CSS selector against a parsed document and
+    return all the matching elements. Tag has a similar method which runs a CSS selector against the contents of
+    a single tag.
+
+    (Earlier versions of Beautiful Soup also have the .select() method, but only the most commonly-used CSS selectors
+    are supported.)
+
+    The SoupSieve documentation lists all the currently supported CSS selectors, but here are some of the basics:
+
+    You can find tags:
+    """)
+print(f'        soup.select("title") : {soup.select("title")}\n')
+            # [<title>The Dormouse's story</title>]
+
+print('        soup.select("p:nth-of-type(3)") : {soup.select("p:nth-of-type(3)")}\n')
+            # [<p class="story">...</p>]
+
+print("    Find tags beneath other tags:\n")
+print(f'        soup.select("body a") : {soup.select("body a")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie"  id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print(f'        soup.select("html head title") : {soup.select("html head title")}\n')
+            # [<title>The Dormouse's story</title>]
+
+print("    Find tags directly beneath other tags:\n")
+print(f'        soup.select("head > title") : {soup.select("head > title")}')
+            # [<title>The Dormouse's story</title>]
+print('        soup.select("p > a") : {soup.select("p > a")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie"  id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+print(f'        soup.select("p > a:nth-of-type(2)") : {soup.select("p > a:nth-of-type(2)")}')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+print(f'        soup.select("p > #link1") : {soup.select("p > #link1")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>]
+print('        soup.select("body > a") : {soup.select("body > a")}\n\n')
+            # []
+
+print("    Find the siblings of tags:")
+print(f'        soup.select("#link1 ~ .sister") : {soup.select("#link1 ~ .sister")}')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie"  id="link3">Tillie</a>]
+print(f'        soup.select("#link1 + .sister") : {soup.select("#link1 + .sister")}\n')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+
+print("    Find tags by CSS class:")
+print(f'        soup.select(".sister") : {soup.select(".sister")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+print(f'        soup.select("[class~=sister]") : {soup.select("[class~=sister]")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("\n    Find tags by ID:\n")
+print(f'        soup.select("#link1") : {soup.select("#link1")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>]
+print(f'        soup.select("a#link2") : {soup.select("a#link2")}')
+            # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+
+print("\n    Find tags that match any selector from a list of selectors:")
+print(f'        soup.select("#link1,#link2") : {soup.select("#link1,#link2")}')
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>]
+
+print("\n    Test for the existence of an attribute:")
+print(f"        soup.select('a[href]') : {soup.select('a[href]')}")
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+print("\n    Find tags by attribute value:")
+print(f"""        soup.select('a[href="http://example.com/elsie"]')""", end=' : ')
+print(soup.select('a[href="http://example.com/elsie"]'))
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>]
+print("""        soup.select('a[href^="http://example.com/"]')""")
+
+example = soup.select('a[href^="http://example.com/"]')
+print(f"""        soup.select('a[href^="http://example.com/"]')) : {example}""")
+            # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+            #  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+            #  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+
+example = soup.select('a[href$="tillie"]')
+print(f"""        soup.select('a[href$="tillie"]') : {example}""")
+            # [<a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+example = soup.select('a[href*=".com/el"]')
+print(f"""        soup.select('a[href*=".com/el"]') : {example}""")
+            # # [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>]
+
+print("\n    There’s also a method called select_one(), which finds only the first tag that matches a selector:")
+print(f'        soup.select_one(".sister") : {soup.select_one(".sister")}')
+            # <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+
+print("""\n\n    When handling a CSS selector that uses namespaces, Beautiful Soup uses the namespace abbreviations it found
+    when parsing the document. You can override this by passing in your own dictionary of abbreviations:
+
+        namespaces = dict(first="http://namespace1/", second="http://namespace2/")
+    """)
+namespaces = dict(first="http://namespace1/", second="http://namespace2/")
+example = soup.select("second|child", namespaces=namespaces)
+print(f'        soup.select("second|child", namespaces=namespaces) : {example}')
+            # # [<ns1:child>I'm in namespace 2</ns1:child>]
+
+print("""
+    All this CSS selector stuff is a convenience for people who already know the CSS selector syntax. You can do all of
+    this with the Beautiful Soup API. And if CSS selectors are all you need, you should parse the document with lxml:
+    it’s a lot faster. But this lets you combine CSS selectors with the Beautiful Soup API.
+
+
+    """)
+
+print("""Modifying the tree
+
+    Beautiful Soup’s main strength is in searching the parse tree, but you can also modify the tree and write your
+    changes as a new HTML or XML document.
+
+1.  Changing tag names and attributes
+
+    I covered this earlier, in Attributes, but it bears repeating. You can rename a tag, change the values of its
+    attributes, add new attributes, and delete attributes:
+
+        soup = BeautifulSoup('<b class="boldest">Extremely bold</b>')
+        tag = soup.b
+        tag.name = "blockquote"
+        tag['class'] = 'verybold'
+        tag['id'] = 1
+    """)
+soup = BeautifulSoup('<b class="boldest">Extremely bold</b>', 'html.parser')
+tag = soup.b
+tag.name = "blockquote"
+tag['class'] = 'verybold'
+tag['id'] = 1
+print(f"        tag : {tag}")
+            # <blockquote class="verybold" id="1">Extremely bold</blockquote>
+print("""
+        del tag['class']
+        del tag['id']
+    """)
+del tag['class']
+del tag['id']
+print(f"        tag : {tag}")
+            # <blockquote>Extremely bold</blockquote>
+
+print("""
+2.  Modifying .string
+
+    If you set a tag’s .string attribute, the tag’s contents are replaced with the string you give:
+
+        markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+        soup = BeautifulSoup(markup)
+        tag = soup.a
+        tag.string = "New link text."
+""")
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup, 'html.parser')
+tag = soup.a
+tag.string = "New link text."
+
+print(f"        tag : {tag}")
+            # <a href="http://example.com/">New link text.</a>
+
+print("\n    Be careful: if the tag contained other tags, they and all their contents will be destroyed.\n")
+print("""    a.  append()
+        You can add to a tag’s contents with Tag.append(). It works just like calling .append() on a Python list:
+
+            soup = BeautifulSoup("<a>Foo</a>")""")
+soup = BeautifulSoup("<a>Foo</a>", 'html.parser')
+print(f'            soup.a.append("Bar") : {soup.a.append("Bar")}')
+print(f'            soup : {soup}')
+            # <html><head></head><body><a>FooBar</a></body></html>
+print(f'            soup.a.contents : {soup.a.contents}')
+            # [u'Foo', u'Bar']
+
+print("""    b.  extend()
+
+        Starting in Beautiful Soup 4.7.0, Tag also supports a method called .extend(), which works just like calling
+        .extend() on a Python list:
+
+            soup = BeautifulSoup("<a>Soup</a>")
+    """)
+soup = BeautifulSoup("<a>Soup</a>", 'html.parser')
+print(f"""            soup.a.extend(["'s", " ", "on"]) : {soup.a.extend(["'s", " ", "on"])}""")
+print(f'            soup : {soup}')
+            # <html><head></head><body><a>Soup's on</a></body></html>
+print(f'            soup.a.contents : {soup.a.contents}')
+            # [u'Soup', u''s', u' ', u'on']
+
+print("""    c.  NavigableString() and .new_tag()
+        If you need to add a string to a document, no problem–you can pass a Python string in to append(), or you can
+        call the NavigableString constructor:
+
+            soup = BeautifulSoup("<b></b>")
+            tag = soup.b""")
+soup = BeautifulSoup("<b></b>", 'html.parser')
+tag = soup.b
+print(f'            tag.append("Hello") : {tag.append("Hello")}\n')
+print('            new_string = NavigableString(" there")')
+new_string = NavigableString(" there")
+print(f'            tag.append(new_string) : {tag.append(new_string)}')
+print(f'            tag : {tag}')
+            # <b>Hello there.</b>
+print(f'            tag.contents : {tag.contents}\n')
+            # [u'Hello', u' there']
+
+print("""    If you want to create a comment or some other subclass of NavigableString, just call the constructor:
+
+            from bs4 import Comment
+            new_comment = Comment("Nice to see you.")
+            tag.append(new_comment)
+    """)
+
+from bs4 import Comment
+new_comment = Comment("Nice to see you.")
+tag.append(new_comment)
+print(f'            tag : {tag}')
+            # <b>Hello there<!--Nice to see you.--></b>
+print(f'            tag.contents : {tag.contents}')
+            # [u'Hello', u' there', u'Nice to see you.']
+
+print("\n        Only the first argument, the tag name, is required.\n")
+
+print("""    d.  insert()
+
+        Tag.insert() is just like Tag.append(), except the new element doesn’t necessarily go at the end of its
+        parent’s .contents. It’ll be inserted at whatever numeric position you say. It works just like .insert()
+        on a Python list:
+
+            markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+            soup = BeautifulSoup(markup)
+            tag = soup.a
+    """)
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup, 'html.parser')
+tag = soup.a
+print(f'            tag.insert(1, "but did not endorse ") : {tag.insert(1, "but did not endorse ")}')
+print(f'            tag : {tag}')
+            # <a href="http://example.com/">I linked to but did not endorse <i>example.com</i></a>
+print(f'            tag.contents : {tag.contents}')
+            # [u'I linked to ', u'but did not endorse', <i>example.com</i>]
+
+print("""
+    e.  insert_before() and insert_after()
+        The insert_before() method inserts tags or strings immediately before something else in the parse tree:
+
+            soup = BeautifulSoup("<b>stop</b>")
+            tag = soup.new_tag("i")
+            tag.string = "Don't"
+    """)
+soup = BeautifulSoup("<b>stop</b>", 'html.parser')
+tag = soup.new_tag("i")
+tag.string = "Don't"
+print(f'            soup.b.string.insert_before(tag) : {soup.b.string.insert_before(tag)}')
+print(f'            soup.b : {soup.b}')
+            # <b><i>Don't</i>stop</b>
+
+print("""
+        The insert_after() method inserts tags or strings immediately following something else in the parse tree:
+
+            div = soup.new_tag('div')
+            div.string = 'ever'
+    """)
+div = soup.new_tag('div')
+div.string = 'ever'
+
+print(f'            soup.b.i.insert_after(" you ", div) : {soup.b.i.insert_after(" you ", div)}')
+print(f'            soup.b : {soup.b}')
+            # <b><i>Don't</i> you <div>ever</div> stop</b>
+print(f'            soup.b.contents : {soup.b.contents}')
+            # [<i>Don't</i>, u' you', <div>ever</div>, u'stop']
+
+print("""
+    f.  clear()
+
+    Tag.clear() removes the contents of a tag:
+
+        markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+        soup = BeautifulSoup(markup)
+        tag = soup.a
+
+        tag.clear()
+    """)
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup, 'html.parser')
+tag = soup.a
+tag.clear()
+print(f'            tag : {tag}')
+            # <a href="http://example.com/"></a>
+
+print("""
+    g. extract()
+
+    PageElement.extract() removes a tag or string from the tree. It returns the tag or string that was extracted:
+
+        markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+        soup = BeautifulSoup(markup)
+        a_tag = soup.a
+        i_tag = soup.i.extract()
+    """)
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup, 'html.parser')
+a_tag = soup.a
+i_tag = soup.i.extract()
+
+print(f'            a_tag : {a_tag}')
+            # <a href="http://example.com/">I linked to</a>
+print(f'            i_tag : {i_tag}')
+            # <i>example.com</i>
+print(f'            print(i_tag.parent) : {print(i_tag.parent)}')
+            # None
+
+print("""
+    h.  decompose()
+
+        Tag.decompose() removes a tag from the tree, then completely destroys it and its contents:
+
+        markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+        soup = BeautifulSoup(markup)
+        a_tag = soup.a
+    """)
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup, 'html.parser')
+a_tag = soup.a
+
+print(f'            soup.i.decompose() : {soup.i.decompose()}')
+print(f'            a_tag : {a_tag}')
+                # <a href="http://example.com/">I linked to</a>
+
+print("""
+    i.  replace_with()
+
+        PageElement.replace_with() removes a tag or string from the tree,
+        and replaces it with the tag or string of your choice:
+
+        markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+        soup = BeautifulSoup(markup)
+        a_tag = soup.a
+
+        new_tag = soup.new_tag("b")
+        new_tag.string = "example.net"
+        a_tag.i.replace_with(new_tag)
+    """)
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup, 'html.parser')
+a_tag = soup.a
+new_tag = soup.new_tag("b")
+new_tag.string = "example.net"
+a_tag.i.replace_with(new_tag)
+
+print(f'            a_tag : {a_tag}')
+            # <a href="http://example.com/">I linked to <b>example.net</b></a>
+
+print("""
+        replace_with() returns the tag or string that was replaced, so that you can examine
+        it or add it back to another part of the tree.
+
+    """)
+
+print("""
+    j.  wrap()
+
+        PageElement.wrap() wraps an element in the tag you specify. It returns the new wrapper:
+
+            soup = BeautifulSoup("<p>I wish I was bold.</p>")""")
+
+soup = BeautifulSoup("<p>I wish I was bold.</p>", 'html.parser')
+print(f'            soup.p.string.wrap(soup.new_tag("b")) : {soup.p.string.wrap(soup.new_tag("b"))}')
+            # <b>I wish I was bold.</b>
+print(f'            soup.p.wrap(soup.new_tag("div")) : {soup.p.wrap(soup.new_tag("div"))}')
+            # <div><p><b>I wish I was bold.</b></p></div>
+
+print("\n        This method is new in Beautiful Soup 4.0.5.\n\n")
+
+print("""
+    k.  unwrap()
+
+    Tag.unwrap() is the opposite of wrap(). It replaces a tag with whatever’s inside that tag.
+    It’s good for stripping out markup:
+
+        markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+        soup = BeautifulSoup(markup)
+        a_tag = soup.a
+        a_tag.i.unwrap()""")
+
+markup = '<a href="http://example.com/">I linked to <i>example.com</i></a>'
+soup = BeautifulSoup(markup, 'html.parser')
+a_tag = soup.a
+a_tag.i.unwrap()
+
+print(f'            a_tag : {a_tag}')
+            # <a href="http://example.com/">I linked to example.com</a>
+
+print("\n        Like replace_with(), unwrap() returns the tag that was replaced.")
+
+
+print("""
+Output
+
+1.  Pretty-printing
+
+    The prettify() method will turn a Beautiful Soup parse tree into a nicely formatted Unicode string, with a
+    separate line for each HTML/XML tag and string:
+
+        markup = ‘<a href=”http://example.com/“>I linked to <i>example.com</i></a>’
+        soup = BeautifulSoup(markup)
+        soup.prettify()
+    """)
+markup = """<a href="http://example.com/">I linked to <i>example.com</i></a>"""
+soup = BeautifulSoup(markup, 'html.parser')
+soup.prettify() # ‘<html>n <head>n </head>n <body>n <a href=”http://example.com/“>n...’
+
+print(soup.prettify())
+            # <html> # <head> # </head> # <body> # <a href=”http://example.com/“>
+            #   I linked to # <i> # example.com # </i> # </a> # </body> # </html>
+
+print("\n        You can call prettify() on the top-level BeautifulSoup object, or on any of its Tag objects:\n")
+
+print(soup.a.prettify())
+            # <a href="http://example.com/">
+            #  I linked to
+            #  <i>
+            #   example.com
+            #  </i>
+            # </a>
+
+print("""
+2.  Non-pretty printing
+
+    If you just want a string, with no fancy formatting, you can call unicode() or str()
+    on a BeautifulSoup object, or a Tag within it:
+
+        str(soup)""")
+print(f'        {str(soup)}')
+            # '<html><head></head><body><a href="http://example.com/">I linked to <i>example.com</i></a></body></html>'
+
+print("""
+        The str() function returns a string encoded in UTF-8. See Encodings for other options.
+
+        You can also call encode() to get a bytestring, and decode() to get Unicode.
+    """)
+
+
+print("""\n\n3.  Output formatters\n
+    If you give Beautiful Soup a document that contains HTML entities like “&lquot;”,
+    they’ll be converted to Unicode characters:
+
+        soup = BeautifulSoup("&ldquo;Dammit!&rdquo; he said.")
+    """)
+soup = BeautifulSoup("&ldquo;Dammit!&rdquo; he said.", "html.parser")
+print("""    If you then convert the document to a string, the Unicode characters will be encoded as UTF-8.
+    You won’t get the HTML entities back:
+    """)
+
+print(f'        str(soup) : {str(soup)}')
+            # '<html><head></head><body>\xe2\x80\x9cDammit!\xe2\x80\x9d he said.</body></html>'
+
+print("""
+    By default, the only characters that are escaped upon output are bare ampersands and angle brackets.
+    These get turned into “&amp;”, “&lt;”, and “&gt;”, so that Beautiful Soup doesn’t inadvertently generate
+    invalid HTML or XML:
+
+        soup = BeautifulSoup("<p>The law firm of Dewey, Cheatem, & Howe</p>")""")
+soup = BeautifulSoup("<p>The law firm of Dewey, Cheatem, & Howe</p>",'html.parser')
+print(f'        soup.p : {soup.p}')
+            # <p>The law firm of Dewey, Cheatem, &amp; Howe</p>
+
+print("""
+        soup = BeautifulSoup('<a href="http://example.com/?foo=val1&bar=val2">A link</a>')""")
+soup = BeautifulSoup('<a href="http://example.com/?foo=val1&bar=val2">A link</a>','html.parser')
+print(f'        soup.a : {soup.a}')
+            # <a href="http://example.com/?foo=val1&amp;bar=val2">A link</a>
+
+print("""
+    You can change this behavior by providing a value for the formatter argument to prettify(), encode(), or decode().
+    Beautiful Soup recognizes six possible values for formatter.
+
+    The default is formatter="minimal". Strings will only be processed enough to ensure that Beautiful Soup generates
+    valid HTML/XML:
+
+        french = "<p>Il a dit &lt;&lt;Sacr&eacute; bleu!&gt;&gt;</p>"
+        soup = BeautifulSoup(french)
+    """)
+french = "<p>Il a dit &lt;&lt;Sacr&eacute; bleu!&gt;&gt;</p>"
+soup = BeautifulSoup(french, 'html.parser')
+example = print(soup.prettify(formatter="minimal"))
+print(f'            print(soup.prettify(formatter="minimal") : {example}')
+            # <html>
+            #  <body>
+            #   <p>
+            #    Il a dit &lt;&lt;Sacré bleu!&gt;&gt;
+            #   </p>
+            #  </body>
+            # </html>
+
+print("""
+    If you pass in formatter="html", Beautiful Soup will convert Unicode characters to HTML entities whenever possible:
+
+        print(soup.prettify(formatter="html"))
+    """)
+print(soup.prettify(formatter="html"))
+            # <html>
+            #  <body>
+            #   <p>
+            #    Il a dit &lt;&lt;Sacr&eacute; bleu!&gt;&gt;
+            #   </p>
+            #  </body>
+            # </html>
+
+print("""
+    If you pass in ``formatter="html5"``, it's the same as
+    formatter="html5", but Beautiful Soup will omit the closing slash in HTML void tags like “br”:
+
+        soup = BeautifulSoup("<br>")
+        print(soup.encode(formatter="html"))
+    """)
+soup = BeautifulSoup("<br>",'html.parser')
+print(f'         html:  {soup.encode(formatter="html")}')
+            # <html><body><br/></body></html>
+print(f'        html5:  {soup.encode(formatter="html5")}')
+#             # <html><body><br></body></html>
+
+print("""
+    If you pass in formatter=None, Beautiful Soup will not modify strings at all on output. This is the fastest
+    option, but it may lead to Beautiful Soup generating invalid HTML/XML, as in these examples:
+    """)
+print(f'        ',end='')
+print(soup.prettify(formatter=None))
+            # <html>
+            #  <body>
+            #   <p>
+            #    Il a dit <<Sacré bleu!>>
+            #   </p>
+            #  </body>
+            # </html>
+
+link_soup = BeautifulSoup('<a href="http://example.com/?foo=val1&bar=val2">A link</a>','html.parser')
+print(f'        ',end='')
+print(link_soup.a.encode(formatter=None))
+            # <a href="http://example.com/?foo=val1&bar=val2">A link</a>
+
+print("""
+    Finally, if you pass in a function for formatter, Beautiful Soup will call that function once for every string
+    and attribute value in the document. You can do whatever you want in this function. Here’s a formatter that
+    converts strings to uppercase and does absolutely nothing else:
+
+        def uppercase(str):
+            return str.upper()
+
+        print(soup.prettify(formatter=uppercase))""")
+
+def uppercase(str):
+    return str.upper()
+print(f'            {soup.prettify(formatter=uppercase)}')
+            # <html>
+            #  <body>
+            #   <p>
+            #    IL A DIT <<SACRÉ BLEU!>>
+            #   </p>
+            #  </body>
+            # </html>
+print("\n    link_soup.a.prettify(formatter=uppercase)")
+print(link_soup.a.prettify(formatter=uppercase))
+    # <a href="HTTP://EXAMPLE.COM/?FOO=VAL1&BAR=VAL2">
+    #  A LINK
+    # </a>
+
+print("""
+    If you’re writing your own function, you should know about the EntitySubstitution class in the bs4.dammit module.
+    This class implements Beautiful Soup’s standard formatters as class methods: the “html” formatter is
+    EntitySubstitution.substitute_html, and the “minimal” formatter is EntitySubstitution.substitute_xml. You can use
+    these functions to simulate formatter=html or formatter==minimal, but then do something extra.
+
+    Here’s an example that replaces Unicode characters with HTML entities whenever possible,
+    but also converts all strings to uppercase:
+
+        from bs4.dammit import EntitySubstitution
+        def uppercase_and_substitute_html_entities(str):
+            return EntitySubstitution.substitute_html(str.upper())
+    """)
+from bs4.dammit import EntitySubstitution
+def uppercase_and_substitute_html_entities(str):
+    return EntitySubstitution.substitute_html(str.upper())
+
+print(soup.prettify(formatter=uppercase_and_substitute_html_entities))
+            # <html>
+            #  <body>
+            #   <p>
+            #    IL A DIT &lt;&lt;SACR&Eacute; BLEU!&gt;&gt;
+            #   </p>
+            #  </body>
+            # </html>
+
+print("""
+    One last caveat: if you create a CData object, the text inside that object is always presented exactly as it
+    appears, with no formatting. Beautiful Soup will call the formatter method, just in case you’ve written a custom
+    method that counts all the strings in the document or something, but it will ignore the return value:
+
+        from bs4.element import CData
+        soup = BeautifulSoup("<a></a>")
+        soup.a.string = CData("one < three")
+    """)
+from bs4.element import CData
+soup = BeautifulSoup("<a></a>", 'html.parser')
+soup.a.string = CData("one < three")
+
+print(soup.a.prettify(formatter="xml"))
+            # <a>
+            #  <![CDATA[one < three]]>
+            # </a>
+
+print("""4.  get_text()
+    If you only want the text part of a document or tag, you can use the get_text() method.
+    It returns all the text in a document or beneath a tag, as a single Unicode string:
+
+        markup = '<a href="http://example.com/">\nI linked to <i>example.com</i>\n</a>'
+        soup = BeautifulSoup(markup,'html.parser')
+    """)
+markup = '<a href="http://example.com/">\nI linked to <i>example.com</i>\n</a>'
+soup = BeautifulSoup(markup, 'html.parser')
+
+print(f'        soup.get_text() : {soup.get_text()}')
+            # u'\nI linked to example.com\n'
+print(f'        soup.i.get_text() : {soup.i.get_text()}')
+            # u'example.com'
+
+print("\n    You can specify a string to be used to join the bits of text together:")
+
+print(f'        soup.get_text("|") : {soup.get_text("|")}')
+            # u'\nI linked to |example.com|\n'
+            # You can tell Beautiful Soup to strip whitespace from the beginning and end of each bit of text:
+
+print(f'        soup.get_text("|", strip=True) : {soup.get_text("|", strip=True)}')
+            # u'I linked to|example.com'
+
+print("\n    But at that point you might want to use the .stripped_strings generator instead,")
+print("    and process the text yourself:")
+
+print([text for text in soup.stripped_strings])
+            # [u'I linked to', u'example.com']
