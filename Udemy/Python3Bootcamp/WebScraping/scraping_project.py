@@ -74,28 +74,31 @@ def get_quote(quotes):
 def guess_quote(quote):
     print(quote[1])
     for x in range(4):
-        guess = input("Who wrote this? ")
+        guess = input(f"Who wrote this? Guesses remaining: {4 - x}. ")
         if guess == quote[0]:
-            print("You guessed it!\n")
+            print("You guessed correctly! Congratulations!\n")
             return 0
         if x == 0:
-            print(f"The author was born on {quote[2]} in {quote[3]}\n")
+            print(f"Here's a hint: The author was born on {quote[2]} in {quote[3]}\n")
         elif x == 1:
-            print(f"The first letter of the author's first name is '{quote[0][0]}'\n")
+            print(f"Here's another hint: The first letter of the author's first name is '{quote[0][0]}'\n")
         elif x == 2:
             author = quote[0].split(" ")
             print(f"The first letter of the author's last name is '{author[1][0]}'\n")
         else:
-            print(f"The author is {quote[0]}\n")
+            print(f"Sorry, you've run out of guesses. The answer was {quote[0]}\n")
+
 
 print("Searching for quotes...")
 complete_list_of_quotes = get_page()
 
 play_again = True
 while play_again:
-    print("Choosing a quote...")
+    print("Here's a quote:\n")
     data = get_quote(complete_list_of_quotes)
 
     guess_quote(data)
-    response = input("Play again? (y/N) ")
-    if response != "y": play_again = False
+    response = input("Would you like to play again (y/N)? ")
+    if response != "y":
+        play_again = False
+        print("Ok! See you next time!")
