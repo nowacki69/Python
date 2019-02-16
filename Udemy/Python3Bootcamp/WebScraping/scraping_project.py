@@ -23,6 +23,7 @@
 # 6 - When the game is over, ask the player if they want to play again. If yes,
 #     restart the game with a new quote. If no, the program is complete.
 from bs4 import BeautifulSoup
+from random import randint
 import requests
 
 
@@ -37,7 +38,7 @@ def get_page():
             full_url = link
         else:
             full_url = link + '/page/' + str(page_num) + '/'
-        print(f"Scraping page {page_num}...)
+        print(f"Scraping page {page_num}...")
         response = requests.get(full_url)
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -61,9 +62,40 @@ def get_page():
     return all_quotes
 
 
+def get_quote(quotes):
+    quotes_count = len(quotes)
+    rand_index = randint(1, quotes_count) - 1
+
+    author, phrase, birth_date, birth_place = quotes[rand_index][0:4]
+    single_quote = ((author, phrase, birth_date, birth_place))
+    return single_quote
+
+
+def guess_quote(quote):
+    print(quote[1])
+    for x in range(4):
+        guess = input("Who wrote this? ")
+        if guess == quote[0]:
+            print("You guessed it!\n")
+            return 0
+        if x == 0:
+            print(f"The author was born on {quote[2]} in {quote[3]}\n")
+        elif x == 1:
+            print(f"The first letter of the author's first name is '{quote[0][0]}'\n")
+        elif x == 2:
+            author = quote[0].split(" ")
+            print(f"The first letter of the author's last name is '{author[1][0]}'\n")
+        else:
+            print(f"The author is {quote[0]}\n")
+
+print("Searching for quotes...")
 complete_list_of_quotes = get_page()
 
-print(complete_list_of_quotes)
+play_again = True
+while play_again:
+    print("Choosing a quote...")
+    data = get_quote(complete_list_of_quotes)
 
-for quote in complete_list_of_quotes:
-    print(quote)
+    guess_quote(data)
+    response = input("Play again? (y/N) ")
+    if response != "y": play_again = False
