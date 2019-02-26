@@ -4,16 +4,21 @@
 # Recall that a prime number is any whole number that has exactly two divisors: one and the number
 # itself. The first few primes are 2, 3, 5, 7, 11, ...
 def next_prime():
-    primes = []
+    prime_nums = []
     x = 1
     while True:
         x += 1
         prime = True
-        for x in primes:
-            if x % prime == 0: return False
-        primes.append(x)
-        yield x
+        for value in prime_nums:
+            if x % value == 0: 
+                prime = False
+                break
+        if prime:
+            prime_nums.append(x)
+            yield x
 
 primes = next_prime()
-[next(primes) for i in range(25)]
+[print(next(primes)) for i in range(25)]
+
+
 # [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
