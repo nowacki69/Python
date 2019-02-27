@@ -4,7 +4,7 @@
 
 def contains_purple(*args):
     """ Returns True if 'purple' is found in any of the arguments
-    
+
     >>> contains_purple(3, True, None)
     False
 
