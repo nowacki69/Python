@@ -2,6 +2,7 @@
 # should return the sum of all the parameters that are floats.  If none are
 # floats, return 0
 
+
 def sum_floats(*args):
     return sum(arg for arg in args if type(arg) == float)
 

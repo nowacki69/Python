@@ -1,4 +1,6 @@
-# Write a function called yes_or_no, which returns a generator that yields yes, then no, then yes, then no, and so on.
+# Write a function called yes_or_no, which returns a generator that yields yes, then no, then
+# yes, then no, and so on.
+
 def yes_or_no():
     reply = "yes"
     while True:
