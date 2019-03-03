@@ -7,7 +7,7 @@ def two_list_dictionary(keys, values):
     if len(keys) > len(values):
         for i in range(0, len(keys) - len(values)):
             values.append(None)
-    return set(zip(keys, values))
+    return dict(zip(keys, values))
 
 
 
