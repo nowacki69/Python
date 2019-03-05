@@ -1,5 +1,6 @@
 import random
 
+
 class Card:
     def __init__(self, value, suit):
         suits = ("Hearts", "Diamonds", "Clubs", "Spades")
@@ -18,8 +19,8 @@ class Card:
 
 
 class Deck:
-    total_cards = 52
-    myHand = []
+    # total_cards = 52
+    # myHand = []
 
     def __init__(self):
         self.cards = ["A of Hearts", "2 of Hearts", "3 of Hearts", "4 of Hearts",
@@ -34,40 +35,45 @@ class Deck:
                       "A of Clubs", "2 of Clubs", "3 of Clubs", "4 of Clubs",
                       "5 of Clubs", "6 of Clubs", "7 of Clubs", "8 of Clubs",
                       "9 of Clubs", "10 of Clubs", "J of Clubs", "Q of Clubs", "K of Clubs"]
-        Deck.total_cards = 52
+        # Deck.total_cards = 52
 
     def __repr__(self):
-        return "Deck of {} cards".format(Deck.total_cards)
+        return "Deck of {} cards".format(self.count())
 
     def _deal(self, num):
         cards_dealt = []
-        if num <= Deck.total_cards:
-            for i in range(0, num):
-                new_card = (self.cards.pop())
-                cards_dealt.append(new_card)
-                Deck.total_cards -= 1
-        else:
+        count = self.count()
+
+        actual = min([count, num])
+
+        if count == 0:
             raise ValueError("All cards have been dealt")
 
-        Deck.myHand.extend(cards_dealt)
+        # if actual <= Deck.total_cards:
+        for i in range(0, actual):
+            new_card = (self.cards.pop())
+            cards_dealt.append(new_card)
+            # Deck.total_cards -= 1
+        # else:
+
+        # Deck.myHand.extend(cards_dealt)
         return cards_dealt
 
     def count(self):
-        return Deck.total_cards
+        return len(self.cards)
 
     def deal_card(self):
-        return self._deal(1)
+        return self._deal(1)[0]
 
     def deal_hand(self, num):
         if int(num) > 0:
             return self._deal(num)
 
     def shuffle(self):
-        if Deck.total_cards == 52:
+        if self.count() == 52:
             random.shuffle(self.cards)
         else:
             raise ValueError("Only full decks can be shuffled")
-
 
 d = Deck()
 print(d.count())
