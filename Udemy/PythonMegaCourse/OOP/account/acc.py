@@ -1,4 +1,5 @@
 class Account:
+
     def __init__(self, filepath):
         self.filepath = filepath
         with open(filepath, 'r') as file:
@@ -19,9 +20,7 @@ class Account:
 
 
 class Checking(Account):
-    """This class generates checking account objects"""
 
-    type="checking"
     def __init__(self, filepath, fee):
         Account.__init__(self, filepath)
         self.fee = fee
@@ -31,18 +30,12 @@ class Checking(Account):
         self.balance -= (amount + self.fee)
         
 
-johns_checking = Checking("jack.txt", 1)
-johns_checking.transfer(100)
-print(johns_checking.balance)
-johns_checking.commit()
-print(johns_checking.type)
+checking = Checking("balance.txt", 1)
+checking.deposit(10)
+checking.transfer(500)
+print(checking.balance)
+checking.commit()
 
-jacks_checking = Checking("john.txt", 1)
-jacks_checking.transfer(100)
-print(jacks_checking.balance)
-jacks_checking.commit()
-print(jacks_checking.type)
-print(jacks_checking.__doc__)
 
 # account = Account("balance.txt")
 # print(account.balance)
