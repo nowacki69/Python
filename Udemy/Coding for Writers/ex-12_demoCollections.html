@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<body onload=" demoCollections()">
+  <div id="resultDiv"></div>
+  <script>
+  var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var course = {
+    title: "English Literature",
+    teacher: "Tom Hardy",
+    numberStudents: 33,
+    departmant: "English",
+    credits: 5,
+    graduate: false
+  }
+
+  function demoCollections() {
+    var result = "";
+    result += "<p>" + "First day: " + daysOfWeek[0] + "</p>";
+    result += "<p>" + "First day: " + daysOfWeek[daysOfWeek.length - 1] + "</p>";
+    for (var i = daysOfWeek.length - 1; i >= 0; i--) {
+      result += "<p>" + daysOfWeek[i] + "</p>";
+    }
+    result += "<p>" + "Teacher: " + course.teacher + "</p>";
+    var totalCredits = course.credits * course.numberStudents
+    result += "<p>" + "Total Credits: " + totalCredits + "</p>";
+
+    for (var prop in course) {
+      if (course.hasOwnProperty(prop)){
+        result += "<p>" + prop + " : " + course[prop] + "</p>";
+      }
+    }
+    resultDiv.innerHTML = result;
+  }
+  </script>
+</body>
+</html>

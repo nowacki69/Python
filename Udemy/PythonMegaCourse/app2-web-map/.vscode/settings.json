@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "C:\\Users\\Wizard\\AppData\\Local\\Programs\\Python\\Python37\\python.exe"
+    "python.linting.pep8Enabled": true,
+    "python.linting.pep8Args": ["--max-line-length=120" ]
+}

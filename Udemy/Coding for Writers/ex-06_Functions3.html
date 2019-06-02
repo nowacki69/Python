@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+  <p>First name: <input type = "text" id="first"></p>
+  <p>Last name: <input type = "text" id="last"></p>
+
+  <button onclick="getName()">Get Name</button>
+  <button onclick="lastNameFirst()">Last Name First</button>
+  <button onclick="showLength()">Full Name Length</button>
+
+  <p id="fullName"</p>
+
+<script>
+  function getName() {
+    fullName.innerHTML = "Full name: " + first.value + " " + last.value;
+  }
+  function lastNameFirst() {
+    fullName.innerHTML = "Full name: " + last.value + ", " + first.value;
+  }
+  function showLength(){
+    fullNameLength = first.value.length + 1 + last.value.length
+    fullName.innerHTML = "Length: " + fullNameLength
+  }
+</script>
+
+</body>
+</html>

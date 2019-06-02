@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<body onload="demoLoop()">
+  <p id="resultPar"></p>
+  <script>
+  function demoLoop() {
+   var result = "";
+   for (var i = 1; i < 100; i*=2) {
+   result += "<p>" + i + "</p>";
+   }
+   resultPar.innerHTML = result;
+  }
+  </script>
+</body>
+</html>

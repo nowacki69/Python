@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+  <body>
+    <p><input type = "text" id="textbox1"></p>
+    <p><input type = "text" id="textbox2"></p>
+    <button onclick="login()">Login</button>
+    <button onclick="compare()">Compare</button>
+    <button onclick="showDirection()">Direction</button>
+    <p id="result"></p>
+    <script>
+    // Verifies that the username and password from the text boxes are valid and logs in the user.
+    function login(){
+      if (textbox1.value == "admin" && textbox2.value == "pass") {
+        result.innerHTML = "Logged in";
+      } else {
+        result.innerHTML = "Incorrect username and password";
+      }
+    }
+    // Takes the values from both text boxes and compares the lenths and put the result in the
+    // result text box.
+    function compare(){
+      if (textbox1.value.length > textbox2.value.length){
+        result.innerHTML = "First is longer";
+      } else {
+        result.innerHTML = "Second is longer";
+      }
+    }
+    // Takes a value collected from showDirection and converts the direction to English and puts
+    // the result in the result text box.
+    function directionName(abbrev){
+      // Return the full name of North, South, East, or West, given
+      // the abbreviations n, s, e, w.
+      switch (abbrev) {
+        case "n":
+          return "North";
+          break;
+        case "s":
+          return "South";
+          break;
+        case "e":
+          return "East";
+          break;
+        case "w":
+          return "West";
+          break;
+        // If no valid direction was given, use "Somewhere" as the result
+        default:
+          return "Somewhere";
+      }
+    }
+    // Retrieves the value from the first text box and uses it to determine which direction to display.
+    function showDirection(abbrev){
+      direction = textbox1.value
+      result.innerHTML = "Go " + directionName(direction)
+    }
+    </script>
+  </body>
+</html>
