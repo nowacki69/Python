@@ -1,7 +1,10 @@
-import cv2, pandas
 from datetime import datetime
 from bokeh.plotting import figure
 from bokeh.io import output_file, show
+
+import cv2
+import pandas
+
 
 first_frame = None
 
@@ -15,24 +18,24 @@ while True:
     df = pandas.DataFrame(columns=["Start", "End"])
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)      # Convert frame to grayscale
-    gray = cv2.GaussianBlur(gray, (21,21), 0)            # Blur frame
+    gray = cv2.GaussianBlur(gray, (21, 21), 0)          # Blur frame
 
     if first_frame is None:                             # If 1st frame, go get another
         first_frame = gray
         continue
 
-    delta_frame = cv2.absdiff(first_frame, gray)         
+    delta_frame = cv2.absdiff(first_frame, gray)
     thresh_frame = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
     thresh_frame = cv2.dilate(thresh_frame, None, iterations=2)
-    (_, cnts, _) = cv2.findContours(thresh_frame.copy(),cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    (_, cnts, _) = cv2.findContours(thresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     for contour in cnts:
         if cv2.contourArea(contour) < 10000:
             continue
-        
+
         status = 1
         (x, y, w, h) = cv2.boundingRect(contour)
-        cv2.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 3)
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
 
     status_list.append(status)
 
@@ -55,9 +58,9 @@ while True:
         break
 
     for i in range(0, len(times), 2):
-        df=df.append({"Start":times[i], "End":times[i+1]}, ignore_index=True)
+        df = df.append({"Start": times[i], "End": times[i+1]}, ignore_index=True)
 
     df.to_csv("Times.csv")
-    
+
     video.release()
     cv2.destroyAllWindows()
