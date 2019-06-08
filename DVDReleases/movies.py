@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[124]:
-
-
 import os, re
 import pandas as pd
 import requests
@@ -77,10 +71,6 @@ for year in range(start_year, current_year + 1, 1):
     collection.append(dfAll.values.tolist())
 # /////////////////////////////////////////////////////////////////////////////
 
-
-# In[125]:
-
-
 # *****************************************************************************
 # Get list of movies I that I have
 movie_dir = "E:\\Video\\_Movies\\"
@@ -102,9 +92,6 @@ for y in collection:    # for every year
 # /////////////////////////////////////////////////////////////////////////////
 
 
-# In[127]:
-
-
 for movie in top_movies:
     title = re.sub(', The', '', movie[1])
     title = re.sub('The ', '', title)
@@ -121,25 +108,9 @@ for movie in top_movies:
                 del top_movies[index]
             except:
                 pass
-            
-
-
-# In[128]:
-
-
-len(top_movies)
-
-
-# In[130]:
-
 
 # Sort remaining Top Movies by ranked postion in each year
 top_movies.sort(key=lambda x: x[0])
 
-
-# In[133]:
-
-
 df = pd.DataFrame(top_movies, columns=['Ranking', 'Title', 'IMDB', 'Rating', 'Year'])
 df.to_csv("MoviesNeeded.csv", index=None, header=True)
-
