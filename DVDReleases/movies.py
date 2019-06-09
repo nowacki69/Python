@@ -1,10 +1,41 @@
-import os, re
+import os, re, requests
 import pandas as pd
-import requests
 
-from bs4 import BeautifulSoup
 from datetime import datetime
-from difflib import get_close_matches
+from bs4 import BeautifulSoup
+
+
+def remove_from_csv(mov):
+    """
+    mov should be a list with 5 elements:
+        Rank, Title, IMDB, Rating, Year
+
+    - opens the CSV file by year, finds the line that matches the movie data
+    - removes that line from the list
+    - save the data back to the CSV file
+
+    """
+
+    # Break the line into variables (mainly to get the year)
+    rank, titl, imdb, rating, yr = mov
+    # Format the data back into strings to write back to the CSV file
+    mov = [rank, titl, imdb, rating]
+
+    # Open the CSV file by year and get all lines into a list
+    # with open(yr + '.csv', 'r') as csv_file:
+    #     reader = csv.reader(csv_file)
+    #     mov_list = list(reader)
+    df1 = pd.read_csv(str(yr) + '.csv')
+    mov_list = df1.values.tolist()
+
+    # locate the specific movie in the list and remove it
+    idx = mov_list.index(mov)
+    mov_list.pop(idx)
+
+    # Set the dataframe and save it to a CSV file (by Year)
+    df1 = pd.DataFrame(mov_list, columns=["Position", "Title", "IMDB", "Rating"])
+    df1.to_csv(str(yr) + '.csv', index=False, header=True)
+
 
 # Get current folder path for csv files
 cwd = os.getcwd()
@@ -45,7 +76,7 @@ for year in range(start_year, current_year + 1, 1):
         c = r.content
         soup = BeautifulSoup(c, "html.parser")
 
-        data = soup.find_all("td", {"class":"dvdcell"})
+        data = soup.find_all("td", {"class": "dvdcell"})
         for item in data:
             movie = {}
             # movie["Chart"] = str(year)
@@ -53,12 +84,12 @@ for year in range(start_year, current_year + 1, 1):
             movie["Title"] = str(list(item)[4].string)
 
             try:
-                movie["IMDB"] = float(item.find("td", {"class":"imdblink left"}).find("a").text)
+                movie["IMDB"] = float(item.find("td", {"class": "imdblink left"}).find("a").text)
             except:
-                movie["IMDB"] = item.find("td", {"class":"imdblink left"}).find("a").text
+                movie["IMDB"] = item.find("td", {"class": "imdblink left"}).find("a").text
 
             try:
-                movie["Rating"] = item.find("td", {"class":"imdblink right"}).text.replace("\xa0", "")
+                movie["Rating"] = item.find("td", {"class": "imdblink right"}).text.replace("\xa0", "")
             except:
                 movie["Rating"] = None
             all_movies.append(movie)
@@ -88,10 +119,11 @@ my_movies.sort()
 # Create a list of the top movie names
 for y in collection:    # for every year
     for movie in y:     # for every movie
-        top_movies.append(movie)        
+        top_movies.append(movie)
 # /////////////////////////////////////////////////////////////////////////////
 
-
+# *****************************************************************************
+# Search for movie titles in my movies and remove them from the list
 for movie in top_movies:
     title = re.sub(', The', '', movie[1])
     title = re.sub('The ', '', title)
@@ -101,16 +133,21 @@ for movie in top_movies:
     for movi in my_movies:
         result1 = movi.find(title)
         result2 = movi.find(movie[4])
+        older = str(int(movie[4])-1)
+        result3 = movi.find(older)
 
-        if result1 > -1 and result2 > -1:
+        if result1 > -1 and (result2 > -1 or result3 > -1):
             try:
                 index = top_movies.index(movie)
                 del top_movies[index]
+                remove_from_csv(movie)
             except:
                 pass
+# /////////////////////////////////////////////////////////////////////////////
 
 # Sort remaining Top Movies by ranked postion in each year
-top_movies.sort(key=lambda x: x[0])
+# top_movies.sort(key=lambda x: x[0])
 
+# Save the movies I don't have to a csv file
 df = pd.DataFrame(top_movies, columns=['Ranking', 'Title', 'IMDB', 'Rating', 'Year'])
 df.to_csv("MoviesNeeded.csv", index=None, header=True)
