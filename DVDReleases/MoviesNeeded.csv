@@ -789,7 +789,6 @@ Ranking,Title,IMDB,Rating,Year
 20,Paul Blart: Mall Cop,5.3,PG-13,2009
 22,Slumdog Millionaire,8.3,R,2009
 23,A Christmas Carol,6.8,PG,2009
-24,Angels & Demons,6.6,PG-13,2009
 25,Terminator Salvation,6.8,PG-13,2009
 27,Inglourious Basterds,8.4,R,2009
 29,District 9,8.3,R,2009
@@ -990,7 +989,6 @@ Ranking,Title,IMDB,Rating,Year
 96,The Five-Year Engagement,6.3,R,2012
 97,Cloud Atlas,7.7,R,2012
 98,One for the Money,5.1,PG-13,2012
-99,Alex Cross,4.9,R,2012
 100,Katy Perry: Part of Me,4.8,PG,2012
 1,The Hunger Games: Catching Fire,7.9,PG-13,2013
 2,Iron Man 3,7.5,PG-13,2013
@@ -1224,7 +1222,6 @@ Ranking,Title,IMDB,Rating,Year
 15,Jason Bourne,6.8,PG-13,2016
 16,Star Trek Beyond,7.2,PG-13,2016
 17,X-Men: Apocalypse,7.3,PG-13,2016
-18,Trolls,6.5,PG,2016
 19,La La Land,8.4,PG-13,2016
 20,Kung Fu Panda 3,7.3,PG,2016
 21,Ghostbusters,5.4,PG-13,2016
@@ -1310,7 +1307,6 @@ Ranking,Title,IMDB,Rating,Year
 12,The Fate of the Furious,6.9,PG-13,2017
 13,Coco,9.0,PG,2017
 14,Dunkirk,8.4,PG-13,2017
-15,Get Out,7.8,R,2017
 16,The Lego Batman Movie,7.5,PG,2017
 17,The Greatest Showman,8.0,PG,2017
 18,The Boss Baby,6.4,PG,2017
@@ -1329,7 +1325,7 @@ Ranking,Title,IMDB,Rating,Year
 32,Murder on the Orient Express,6.8,PG-13,2017
 33,Kingsman: The Golden Circle,7.2,R,2017
 34,Annabelle: Creation,6.9,R,2017
-35,Blade Runner 2049,,R,2017
+35,Blade Runner 2049,NA,R,2017
 36,John Wick: Chapter 2,7.9,R,2017
 37,The Emoji Movie,2.1,PG,2017
 38,Power Rangers,6.2,PG-13,2017
@@ -1358,7 +1354,6 @@ Ranking,Title,IMDB,Rating,Year
 64,xXx: Return of Xander Cage,5.3,PG-13,2017
 65,47 Meters Down,5.8,PG-13,2017
 67,Ghost in the Shell,6.5,PG-13,2017
-68,Valerian and the City of a Thousand Planets,6.7,PG-13,2017
 69,The Big Sick,7.9,R,2017
 70,King Arthur: Legend of the Sword,7.0,PG-13,2017
 71,Jigsaw,6.1,R,2017
@@ -1392,7 +1387,7 @@ Ranking,Title,IMDB,Rating,Year
 100,Sleepless,5.6,R,2017
 2,Avengers: Infinity War,8.6,PG-13,2018
 3,Incredibles 2,8.1,PG,2018
-4,Jurassic World: Fallen Kingdom,6.4,PG-13,2018
+5,Aquaman,7.4,,2018
 6,Deadpool 2,7.9,R,2018
 7,The Grinch,6.4,PG,2018
 8,Mission: Impossible - Fallout,8.1,PG-13,2018
@@ -1480,71 +1475,96 @@ Ranking,Title,IMDB,Rating,Year
 98,Searching,7.9,,2018
 99,Winchester,5.4,PG-13,2018
 100,The Strangers: Prey at Night,5.7,R,2018
-1,Avengers: Endgame,8.8,,2019
-3,Aladdin,7.4,,2019
-4,Us,7.2,,2019
-5,How to Train Your Dragon: The Hidden World,7.7,,2019
-6,Shazam!,7.4,,2019
-7,Pokemon: Detective Pikachu,7.0,,2019
-8,John Wick: Chapter 3 - Parabellum,8.1,,2019
-9,Dumbo,6.6,,2019
-11,The Upside,6.4,,2019
-12,The Lego Movie 2: The Second Part,6.9,,2019
-13,Alita: Battle Angel,7.6,,2019
-14,A Madea Family Funeral,4.2,PG-13,2019
-15,Escape Room,6.4,,2019
-16,Pet Sematary,6.0,,2019
-17,What Men Want,4.6,,2019
-18,The Curse of La Llorona,5.7,,2019
-19,Godzilla: King of the Monsters,7.2,,2019
-20,Isn't It Romantic,6.0,,2019
-21,Five Feet Apart,7.1,,2019
-22,Wonder Park,5.7,PG,2019
-23,A Dog's Way Home,6.5,,2019
-24,Little,5.4,,2019
-25,Breakthrough,5.8,,2019
-26,The Intruder,5.4,,2019
-27,The Hustle,5.2,,2019
-28,Cold Pursuit,6.5,,2019
-29,Dragon Ball Super: Broly,8.1,,2019
-30,Long Shot,7.2,,2019
-31,Happy Death Day 2U,6.5,,2019
-32,Rocketman,7.7,,2019
-33,On the Basis of Sex,6.6,PG-13,2019
-34,Fighting with My Family,7.5,PG-13,2019
-35,Hellboy,5.4,,2019
-36,UglyDolls,4.6,,2019
-37,A Dog's Journey,7.3,,2019
-39,Unplanned,6.2,,2019
-40,The Kid Who Would Be King,6.2,,2019
-41,Missing Link,7.0,,2019
-42,Miss Bala,5.1,,2019
-43,The Prodigy,6.0,,2019
-44,Booksmart,7.6,,2019
-45,Brightburn,6.5,,2019
-46,Poms,5.2,,2019
-47,After,5.6,,2019
-48,Greta,6.2,,2019
-49,The Best of Enemies,6.9,,2019
-50,Hotel Mumbai,7.8,,2019
-51,No Manches Frida 2,3.5,,2019
-52,Apollo 11,8.6,,2019
-53,Serenity,5.3,,2019
-54,Penguins,6.8,,2019
-55,Run the Race,6.4,,2019
-56,Captive State,6.6,PG-13,2019
-57,The Wandering Earth,7.3,,2019
-58,Gloria Bell,6.6,,2019
-59,Stan & Ollie,7.6,,2019
-60,The Mustang,7.4,,2019
-61,The Sun Is Also a Star,5.5,,2019
-62,Tolkien,7.0,,2019
-63,Amazing Grace,7.7,,2019
-64,Uri: The Surgical Strike,9.0,,2019
-66,The Beach Bum,6.2,,2019
-67,Everybody Knows,7.0,,2019
-68,Arctic,7.3,,2019
-69,The Biggest Little Farm,8.2,,2019
-70,The Aftermath,6.3,,2019
-71,The Kid,6.4,,2019
-72,Red Joan,6.3,,2019
+1,Avengers: Endgame,8.7,,2019
+2,The Lion King,7.2,,2019
+4,Toy Story 4,8.2,,2019
+5,Spider-Man: Far From Home,7.9,,2019
+6,Aladdin,7.4,,2019
+7,Us,7.2,,2019
+8,John Wick: Chapter 3 - Parabellum,8.0,,2019
+9,How to Train Your Dragon: The Hidden World,7.7,,2019
+10,The Secret Life of Pets 2,6.6,,2019
+11,Pokemon: Detective Pikachu,6.8,,2019
+12,Shazam!,7.4,,2019
+13,Dumbo,6.6,,2019
+15,Godzilla: King of the Monsters,6.6,,2019
+16,The Upside,6.4,,2019
+17,The Lego Movie 2: The Second Part,6.9,,2019
+18,Rocketman,7.6,,2019
+19,Alita: Battle Angel,7.6,,2019
+20,Men in Black International,5.6,,2019
+21,Once Upon a Time in Hollywood,8.5,,2019
+22,A Madea Family Funeral,4.2,PG-13,2019
+23,Annabelle Comes Home,6.2,,2019
+24,Yesterday,7.0,,2019
+25,Dark Phoenix,6.0,,2019
+26,Fast & Furious Presents: Hobbs & Shaw,7.2,,2019
+27,Escape Room,6.4,,2019
+28,The Curse of La Llorona,5.7,,2019
+29,Pet Sematary,6.0,,2019
+30,What Men Want,4.6,,2019
+31,Isn't It Romantic,6.0,,2019
+32,Five Feet Apart,7.1,,2019
+34,Wonder Park,5.7,PG,2019
+35,A Dog's Way Home,6.5,,2019
+36,Breakthrough,5.8,,2019
+37,Little,5.4,,2019
+38,Crawl,6.7,,2019
+39,The Intruder,5.4,,2019
+40,The Hustle,5.3,,2019
+41,Cold Pursuit,6.5,,2019
+42,Dragon Ball Super: Broly,8.1,,2019
+43,Long Shot,7.2,,2019
+44,Child's Play,6.3,,2019
+45,Happy Death Day 2U,6.5,,2019
+46,Midsommar,7.6,,2019
+47,On the Basis of Sex,6.6,PG-13,2019
+48,Fighting with My Family,7.5,PG-13,2019
+49,Booksmart,7.4,,2019
+50,A Dog's Journey,7.3,,2019
+51,Hellboy,5.4,,2019
+52,Stuber,6.2,,2019
+53,Shaft,6.4,,2019
+54,UglyDolls,4.5,,2019
+55,Unplanned,6.2,,2019
+56,Brightburn,6.4,,2019
+57,The Kid Who Would Be King,6.2,,2019
+58,Missing Link,7.0,,2019
+59,Late Night,6.5,,2019
+60,Miss Bala,5.1,,2019
+61,The Prodigy,6.0,,2019
+62,Poms,5.3,,2019
+63,After,5.6,,2019
+64,Greta,6.2,,2019
+65,The Best of Enemies,6.9,,2019
+66,Hotel Mumbai,7.8,,2019
+67,No Manches Frida 2,3.5,,2019
+68,Apollo 11,8.6,,2019
+69,Serenity,5.3,,2019
+70,Anna,6.6,,2019
+71,Penguins,6.8,,2019
+72,The Farewell,8.2,,2019
+73,The Dead Don't Die,6.0,,2019
+74,Run the Race,6.4,,2019
+75,Captive State,6.6,PG-13,2019
+76,The Wandering Earth,7.3,,2019
+77,Gloria Bell,6.6,,2019
+78,Stan & Ollie,7.6,,2019
+79,The Mustang,6.9,,2019
+80,The Sun Is Also a Star,5.5,,2019
+81,Tolkien,7.0,,2019
+82,Amazing Grace,7.8,,2019
+83,Pavarotti,7.7,,2019
+84,The Last Black Man in San Francisco,7.8,,2019
+85,The Biggest Little Farm,8.0,,2019
+86,Uri: The Surgical Strike,9.0,,2019
+88,The Beach Bum,6.2,,2019
+90,Arctic,7.3,,2019
+91,The Art of Self-Defense,7.4,,2019
+92,The White Crow,6.5,,2019
+93,The Aftermath,6.3,,2019
+94,Red Joan,6.2,,2019
+95,Wild Rose,7.5,,2019
+96,The Kid,6.4,,2019
+97,All Is True,6.0,,2019
+98,The Souvenir,6.7,,2019
